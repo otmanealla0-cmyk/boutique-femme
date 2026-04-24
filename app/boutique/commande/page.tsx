@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/cart'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -27,10 +27,11 @@ export default function CheckoutPage() {
     postalCode: '',
   })
 
-  if (items.length === 0 && step === 'form') {
-    router.push('/boutique/panier')
-    return null
-  }
+  useEffect(() => {
+    if (items.length === 0 && step === 'form') {
+      router.push('/boutique/panier')
+    }
+  }, [items.length, step, router])
 
   async function handleSubmitForm(e: React.FormEvent) {
     e.preventDefault()
