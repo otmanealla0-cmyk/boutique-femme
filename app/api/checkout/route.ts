@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     currency: 'EUR',
     orderId: order.orderNumber,
     description: `Commande ${order.orderNumber} – Dress By Me`,
-    returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/boutique/confirmation?order=${order.id}`,
+    returnUrl: `${process.env.NEXTAUTH_URL || 'https://dressbymee.shop'}/boutique/confirmation?order=${order.id}`,
   })
 
   await prisma.order.update({
