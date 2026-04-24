@@ -45,24 +45,29 @@ export default function CheckoutPage() {
       }),
     })
 
+    const orderData = await orderRes.json()
     if (!orderRes.ok) {
-      toast.error('Erreur lors de la création de la commande')
+      toast.error('Erreur commande : ' + (orderData.error || orderRes.status))
       setLoading(false)
       return
     }
 
-    const order = await orderRes.json()
-
     const checkoutRes = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: order.id }),
+      body: JSON.stringify({ orderId: orderData.id }),
     })
 
     const checkoutData = await checkoutRes.json()
 
     if (!checkoutRes.ok) {
-      toast.error(checkoutData.error || 'Erreur de paiement')
+      toast.error('Erreur paiement : ' + (checkoutData.error || checkoutRes.status))
+      setLoading(false)
+      return
+    }
+
+    if (!checkoutData.checkoutId) {
+      toast.error('Identifiant de paiement manquant')
       setLoading(false)
       return
     }
