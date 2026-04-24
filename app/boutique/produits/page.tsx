@@ -7,19 +7,16 @@ import Image from 'next/image'
 export default async function ProduitsPage({
   searchParams,
 }: {
-  searchParams: { cat?: string; q?: string }
+  searchParams: Promise<{ cat?: string; q?: string }>
 }) {
+  const { cat, q } = await searchParams
   const [categories, products] = await Promise.all([
     prisma.category.findMany({ orderBy: { name: 'asc' } }),
     prisma.product.findMany({
       where: {
         active: true,
-        ...(searchParams.cat
-          ? { category: { slug: searchParams.cat } }
-          : {}),
-        ...(searchParams.q
-          ? { name: { contains: searchParams.q } }
-          : {}),
+        ...(cat ? { category: { slug: cat } } : {}),
+        ...(q ? { name: { contains: q } } : {}),
       },
       include: { category: true },
       orderBy: { createdAt: 'desc' },
@@ -30,8 +27,8 @@ export default async function ProduitsPage({
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-5 md:mb-8">
         <h1 className="text-3xl font-playfair text-charcoal">
-          {searchParams.cat
-            ? categories.find(c => c.slug === searchParams.cat)?.name || 'Boutique'
+          {cat
+            ? categories.find(c => c.slug === cat)?.name || 'Boutique'
             : 'Toute la boutique'}
         </h1>
         <p className="text-nude-dark mt-1">{products.length} article(s)</p>
