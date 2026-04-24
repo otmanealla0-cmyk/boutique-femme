@@ -78,7 +78,7 @@ export default function CheckoutPage() {
 
   function handlePaymentSuccess() {
     clear()
-    router.push(`/boutique/confirmation?order=${orderId}`)
+    window.location.href = `/boutique/confirmation?order=${orderId}`
   }
 
   return (
