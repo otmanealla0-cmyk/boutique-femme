@@ -8,8 +8,9 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get('category')
   const admin = searchParams.get('admin')
 
+  const session = admin ? await getServerSession(authOptions) : null
   const where: Record<string, unknown> = {}
-  if (!admin) where.active = true
+  if (!admin || !session) where.active = true
   if (category) where.categoryId = category
 
   const products = await prisma.product.findMany({

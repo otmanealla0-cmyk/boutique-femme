@@ -112,9 +112,6 @@ export default async function HomePage() {
             <div className="text-6xl mb-4">🛍️</div>
             <h2 className="text-2xl font-playfair text-charcoal mb-3">La boutique s&apos;habille...</h2>
             <p className="text-nude-dark mb-6">Les produits arrivent bientôt !</p>
-            <Link href="/admin" className="btn-secondary inline-flex items-center gap-2">
-              Aller dans l&apos;admin
-            </Link>
           </div>
         </section>
       )}
