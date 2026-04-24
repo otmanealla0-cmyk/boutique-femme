@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useCart } from '@/lib/cart'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -17,6 +17,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [checkoutId, setCheckoutId] = useState<string | null>(null)
   const [orderId, setOrderId] = useState<string | null>(null)
+  const orderIdRef = useRef<string | null>(null)
 
   const [form, setForm] = useState({
     customerName: '',
@@ -57,6 +58,7 @@ export default function CheckoutPage() {
     }
 
     setOrderId(orderData.id)
+    orderIdRef.current = orderData.id
 
     const checkoutRes = await fetch('/api/checkout', {
       method: 'POST',
@@ -77,11 +79,12 @@ export default function CheckoutPage() {
   }
 
   async function handlePaymentSuccess() {
-    if (orderId) {
-      await fetch(`/api/orders/${orderId}/confirm`, { method: 'POST' })
+    const id = orderIdRef.current || orderId
+    if (id) {
+      await fetch(`/api/orders/${id}/confirm`, { method: 'POST' })
     }
     clear()
-    window.location.href = `/boutique/confirmation?order=${orderId}`
+    window.location.href = `/boutique/confirmation?order=${id}`
   }
 
   return (
