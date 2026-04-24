@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'res.cloudinary.com'],
   },
   async headers() {
     return [
@@ -17,7 +17,7 @@ const nextConfig = {
               "connect-src 'self' https://*.sumup.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.sumup.com",
               "font-src 'self' https://fonts.gstatic.com https://*.sumup.com",
-              "img-src 'self' data: blob: https://*.sumup.com",
+              "img-src 'self' data: blob: https://*.sumup.com https://res.cloudinary.com",
               "worker-src blob: https://*.sumup.com",
             ].join('; '),
           },
