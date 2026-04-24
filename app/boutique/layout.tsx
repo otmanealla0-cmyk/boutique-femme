@@ -2,6 +2,7 @@ import { CartProvider } from '@/lib/cart'
 import StoreHeader from '@/components/store/Header'
 import Logo from '@/components/Logo'
 import { prisma } from '@/lib/prisma'
+import Script from 'next/script'
 
 export default async function StoreLayout({ children }: { children: React.ReactNode }) {
   const rawCategories = await prisma.category.findMany()
@@ -13,6 +14,7 @@ export default async function StoreLayout({ children }: { children: React.ReactN
 
   return (
     <CartProvider>
+      <Script src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js" strategy="afterInteractive" />
       <div className="min-h-screen flex flex-col">
         <StoreHeader categories={categories} />
         <main className="flex-1">{children}</main>
