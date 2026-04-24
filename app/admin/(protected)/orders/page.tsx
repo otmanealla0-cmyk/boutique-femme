@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import OrderStatusSelect from '@/components/admin/OrderStatusSelect'
+import OrderDeleteButton from '@/components/admin/OrderDeleteButton'
 
 export default async function AdminOrders() {
   const orders = await prisma.order.findMany({
@@ -47,9 +48,10 @@ export default async function AdminOrders() {
                     {new Date(order.createdAt).toLocaleString('fr-FR')}
                   </p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex flex-col items-end gap-2">
                   <p className="text-xl font-playfair font-bold text-charcoal">{order.total.toFixed(2)} €</p>
                   <OrderStatusSelect orderId={order.id} currentStatus={order.status} />
+                  <OrderDeleteButton orderId={order.id} />
                 </div>
               </div>
 

@@ -18,3 +18,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   return NextResponse.json(order)
 }
+
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession(authOptions)
+  if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+
+  const { id } = await params
+  await prisma.order.delete({ where: { id } })
+
+  return NextResponse.json({ ok: true })
+}

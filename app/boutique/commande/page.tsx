@@ -76,7 +76,10 @@ export default function CheckoutPage() {
     setLoading(false)
   }
 
-  function handlePaymentSuccess() {
+  async function handlePaymentSuccess() {
+    if (orderId) {
+      await fetch(`/api/orders/${orderId}/confirm`, { method: 'POST' })
+    }
     clear()
     window.location.href = `/boutique/confirmation?order=${orderId}`
   }
