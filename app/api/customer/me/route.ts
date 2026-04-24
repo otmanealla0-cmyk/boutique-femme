@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getCustomerFromCookies } from '@/lib/customerAuth'
 
 export async function GET() {
-  const customer = getCustomerFromCookies()
+  const customer = await getCustomerFromCookies()
   if (!customer) return NextResponse.json({ error: 'Non connecté' }, { status: 401 })
 
   const orders = await prisma.order.findMany({

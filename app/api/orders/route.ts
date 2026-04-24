@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
   }, 0)
 
   const orderNumber = `CMD-${Date.now().toString().slice(-8)}`
-  const loggedInCustomer = getCustomerFromCookies()
+  const loggedInCustomer = await getCustomerFromCookies()
 
   const order = await prisma.order.create({
     data: {

@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
 
-export default async function EditProduct({ params }: { params: { id: string } }) {
+export default async function EditProduct({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const [product, categories] = await Promise.all([
-    prisma.product.findUnique({ where: { id: params.id } }),
+    prisma.product.findUnique({ where: { id } }),
     prisma.category.findMany({ orderBy: { name: 'asc' } }),
   ])
 

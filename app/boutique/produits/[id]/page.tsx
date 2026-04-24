@@ -5,9 +5,10 @@ import ProductGallery from '@/components/store/ProductGallery'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const product = await prisma.product.findUnique({
-    where: { id: params.id, active: true },
+    where: { id, active: true },
     include: { category: true },
   })
 

@@ -16,8 +16,9 @@ export function verifyCustomerToken(token: string) {
   }
 }
 
-export function getCustomerFromCookies() {
-  const token = cookies().get(COOKIE)?.value
+export async function getCustomerFromCookies() {
+  const jar = await cookies()
+  const token = jar.get(COOKIE)?.value
   if (!token) return null
   return verifyCustomerToken(token)
 }

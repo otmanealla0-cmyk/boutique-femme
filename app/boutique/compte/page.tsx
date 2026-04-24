@@ -22,7 +22,7 @@ const statusLabels: Record<string, string> = {
 }
 
 export default async function AccountPage() {
-  const customer = getCustomerFromCookies()
+  const customer = await getCustomerFromCookies()
   if (!customer) redirect('/boutique/compte/connexion')
 
   const orders = await prisma.order.findMany({
