@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Script from 'next/script'
 
 declare global {
   interface Window {
@@ -26,48 +27,39 @@ interface Props {
 export default function SumUpWidget({ checkoutId, onSuccess, onError }: Props) {
   const mounted = useRef(false)
 
-  useEffect(() => {
+  function handleScriptLoad() {
     if (mounted.current) return
     mounted.current = true
 
-    function mountWidget() {
-      window.SumUpCard.mount({
-        id: 'sumup-card',
-        checkoutId,
-        locale: 'fr-FR',
-        showInstallments: false,
-        onResponse: (type, body) => {
-          if (type === 'success') {
-            onSuccess()
-          } else if (type === 'error' || type === 'fail') {
-            onError((body?.message as string) || 'Paiement refusé')
-          }
-        },
-      })
-    }
+    window.SumUpCard.mount({
+      id: 'sumup-card',
+      checkoutId,
+      locale: 'fr-FR',
+      showInstallments: false,
+      onResponse: (type, body) => {
+        if (type === 'success') {
+          onSuccess()
+        } else if (type === 'error' || type === 'fail') {
+          onError((body?.message as string) || 'Paiement refusé')
+        }
+      },
+    })
+  }
 
-    if (window.SumUpCard) {
-      mountWidget()
-      return
-    }
-
-    const script = document.createElement('script')
-    script.src = 'https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js'
-    script.async = true
-    script.onload = mountWidget
-    document.head.appendChild(script)
-
-    return () => {
-      try { window.SumUpCard?.unmount() } catch {}
+  useEffect(() => {
+    if (window.SumUpCard && !mounted.current) {
+      handleScriptLoad()
     }
   }, [])
 
   return (
-    <div>
-      <p className="text-xs text-nude-dark text-center mb-4 animate-pulse">
-        Chargement du module de paiement...
-      </p>
-      <div id="sumup-card" />
-    </div>
+    <>
+      <Script
+        src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js"
+        strategy="afterInteractive"
+        onLoad={handleScriptLoad}
+      />
+      <div id="sumup-card" className="min-h-[300px]" />
+    </>
   )
 }
