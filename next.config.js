@@ -3,6 +3,14 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'res.cloudinary.com'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/.well-known/apple-developer-merchantid-domain-association',
+        destination: '/api/apple-pay-domain',
+      },
+    ]
+  },
   async headers() {
     return [
       {
