@@ -104,8 +104,9 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
             <tr>
               <td style="padding:24px 40px; border-top:1px solid #EDE5D8; text-align:center;">
                 <p style="margin:0; font-size:12px; color:#9E8E7C; line-height:1.7;">
-                  Des questions ? Écris-nous à <a href="mailto:dressbymee@gmail.com" style="color:#8B7355;">dressbymee@gmail.com</a><br>
-                  ou sur Snapchat 👻 <strong>shopluxe31</strong>
+                  Des questions ? Réponds directement à cet email ou contacte-nous sur<br>
+                  ou sur Snapchat 👻 <strong>shopluxe31</strong><br>
+                  Tu peux aussi répondre directement à cet email.
                 </p>
               </td>
             </tr>
@@ -119,6 +120,7 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
 
   await resend.emails.send({
     from: 'Dress By Me <noreply@dressbymee.shop>',
+    replyTo: 'dressbymee.support@gmail.com',
     to: customerEmail,
     subject: `Confirmation de ta commande ${orderNumber} 🎀`,
     html,
