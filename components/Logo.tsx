@@ -1,20 +1,23 @@
+import Image from 'next/image'
+
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg'
   inverted?: boolean
 }
 
 export default function Logo({ size = 'md', inverted = false }: LogoProps) {
-  const textColor = inverted ? 'text-white' : 'text-charcoal'
-
-  const sizes = {
-    sm: 'text-3xl',
-    md: 'text-5xl',
-    lg: 'text-7xl',
-  }
+  const heights = { sm: 36, md: 52, lg: 72 }
+  const h = heights[size]
+  const w = h * (375 / 375)
 
   return (
-    <span className={`font-calligraphy leading-none ${sizes[size]} ${textColor}`}>
-      Dress by me
-    </span>
+    <Image
+      src="/logo.png"
+      alt="Dress By Me"
+      width={w}
+      height={h}
+      style={{ height: h, width: 'auto', filter: inverted ? 'invert(1)' : 'none' }}
+      priority
+    />
   )
 }
