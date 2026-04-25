@@ -1,8 +1,9 @@
 export const dynamic = 'force-dynamic'
 
 import { prisma } from '@/lib/prisma'
+import { getCustomerFromCookies } from '@/lib/customerAuth'
 import Link from 'next/link'
-import { CheckCircle, ArrowRight, Package } from 'lucide-react'
+import { CheckCircle, ArrowRight, Package, User } from 'lucide-react'
 
 export default async function ConfirmationPage({
   searchParams,
@@ -10,6 +11,7 @@ export default async function ConfirmationPage({
   searchParams: Promise<{ order?: string }>
 }) {
   const { order: orderId } = await searchParams
+  const customer = await getCustomerFromCookies()
 
   let order = orderId
     ? await prisma.order.findUnique({
@@ -35,7 +37,7 @@ export default async function ConfirmationPage({
       </p>
 
       {order ? (
-        <div className="card p-6 text-left mb-8">
+        <div className="card p-6 text-left mb-6">
           <div className="flex items-center gap-2 mb-4">
             <Package size={18} className="text-rose-deep" />
             <p className="font-playfair font-bold text-charcoal text-lg">Commande {order.orderNumber}</p>
@@ -61,15 +63,43 @@ export default async function ConfirmationPage({
           </div>
         </div>
       ) : (
-        <div className="card p-6 mb-8">
+        <div className="card p-6 mb-6">
           <p className="text-nude-dark text-sm">Ton paiement a été validé. Garde ton numéro de commande reçu par email.</p>
         </div>
       )}
 
+      {!customer && (
+        <div className="card p-5 mb-6 bg-rose-50 border border-rose-100 text-left">
+          <div className="flex items-center gap-2 mb-2">
+            <User size={16} className="text-rose-deep" />
+            <p className="font-medium text-charcoal text-sm">Suivre ta commande en temps réel</p>
+          </div>
+          <p className="text-xs text-nude-dark mb-4">
+            Crée un compte gratuit pour retrouver ta commande, voir son statut et son numéro de suivi à tout moment.
+          </p>
+          <div className="flex gap-3">
+            <Link
+              href="/boutique/compte/inscription"
+              className="btn-primary flex-1 text-center text-sm py-2"
+            >
+              Créer un compte
+            </Link>
+            <Link
+              href="/boutique/compte/connexion"
+              className="btn-secondary flex-1 text-center text-sm py-2"
+            >
+              Se connecter
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link href="/boutique/compte" className="btn-secondary inline-flex items-center justify-center gap-2">
-          Suivre ma commande
-        </Link>
+        {customer && (
+          <Link href="/boutique/compte" className="btn-secondary inline-flex items-center justify-center gap-2">
+            Suivre ma commande
+          </Link>
+        )}
         <Link href="/boutique" className="btn-primary inline-flex items-center justify-center gap-2">
           Continuer mes achats
           <ArrowRight size={18} />

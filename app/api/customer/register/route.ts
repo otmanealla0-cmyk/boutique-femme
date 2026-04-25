@@ -19,6 +19,11 @@ export async function POST(req: NextRequest) {
       data: { name, email, password: hashed },
     })
 
+    await prisma.order.updateMany({
+      where: { customerEmail: email, customerId: null },
+      data: { customerId: customer.id },
+    })
+
     const token = signCustomerToken({ id: customer.id, email: customer.email, name: customer.name })
 
     const res = NextResponse.json({ ok: true })

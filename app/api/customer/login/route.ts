@@ -14,6 +14,11 @@ export async function POST(req: NextRequest) {
   if (!valid)
     return NextResponse.json({ error: 'Email ou mot de passe incorrect' }, { status: 401 })
 
+  await prisma.order.updateMany({
+    where: { customerEmail: email, customerId: null },
+    data: { customerId: customer.id },
+  })
+
   const token = signCustomerToken({ id: customer.id, email: customer.email, name: customer.name })
 
   const res = NextResponse.json({ ok: true })
