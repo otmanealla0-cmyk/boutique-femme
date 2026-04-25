@@ -58,7 +58,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
           <div className="border-t border-nude-medium pt-5 space-y-3 text-sm text-charcoal/70">
             <p>✓ Livraison entre 10 et 19j à domicile</p>
             <p>✓ Paiement sécurisé via SumUp</p>
-            <p>✓ Retours acceptés sous 14 jours</p>
+            <p>✓ Retours acceptés sous 7 jours</p>
           </div>
         </div>
       </div>
