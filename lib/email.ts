@@ -122,7 +122,7 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
     from: 'Dress By Me <noreply@dressbymee.shop>',
     replyTo: 'dressbymee.support@gmail.com',
     to: customerEmail,
-    subject: `Confirmation de ta commande ${orderNumber} 🎀`,
+    subject: `Confirmation de ta commande ${orderNumber}`,
     html,
   })
 }
@@ -152,7 +152,7 @@ export async function sendWelcomeEmail({ name, email }: { name: string; email: s
             <!-- Body -->
             <tr>
               <td style="padding:32px 40px;">
-                <p style="margin:0 0 8px; font-size:15px; color:#1A1512;">Bonjour ${name} 🎀</p>
+                <p style="margin:0 0 8px; font-size:15px; color:#1A1512;">Bonjour ${name},</p>
                 <p style="margin:0 0 24px; font-size:14px; color:#9E8E7C; line-height:1.7;">
                   Ton compte Dress By Me a bien été créé. On est ravies de t'accueillir !<br>
                   Tu peux dès maintenant découvrir nos articles et passer ta première commande.
@@ -198,7 +198,7 @@ export async function sendWelcomeEmail({ name, email }: { name: string; email: s
     from: 'Dress By Me <noreply@dressbymee.shop>',
     replyTo: 'dressbymee.support@gmail.com',
     to: email,
-    subject: `Bienvenue chez Dress By Me ! 🎀`,
+    subject: `Bienvenue chez Dress By Me`,
     html,
   })
 }
