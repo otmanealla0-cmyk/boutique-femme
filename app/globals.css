@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -16,56 +16,55 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-rose-deep text-white px-6 py-3 rounded-full font-medium
-           hover:bg-rose-dark transition-all duration-200 shadow-sm
-           hover:shadow-md active:scale-95;
+    @apply bg-charcoal text-white px-6 py-3 rounded-sm font-medium tracking-wide
+           hover:bg-rose-dark transition-all duration-200 active:scale-95;
   }
 
   .btn-secondary {
-    @apply border-2 border-rose-deep text-rose-deep px-6 py-3 rounded-full
-           font-medium hover:bg-rose-blush transition-all duration-200;
+    @apply border border-charcoal text-charcoal px-6 py-3 rounded-sm
+           font-medium tracking-wide hover:bg-nude-base transition-all duration-200;
   }
 
   .btn-ghost {
-    @apply text-charcoal px-4 py-2 rounded-full hover:bg-nude-base transition-colors;
+    @apply text-charcoal px-4 py-2 rounded-sm hover:bg-nude-base transition-colors;
   }
 
   .card {
-    @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300;
+    @apply bg-white border border-nude-medium rounded-sm shadow-none
+           hover:border-nude-dark transition-colors duration-300;
   }
 
   .input-field {
-    @apply w-full border border-nude-medium rounded-xl px-4 py-3 text-charcoal
-           focus:outline-none focus:ring-2 focus:ring-rose-soft focus:border-transparent
+    @apply w-full border border-nude-medium rounded-sm px-4 py-3 text-charcoal
+           focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal
            placeholder-nude-dark bg-white transition-all;
   }
 
   .label {
-    @apply block text-sm font-medium text-charcoal mb-1.5;
+    @apply block text-xs font-medium tracking-widest uppercase text-nude-dark mb-1.5;
   }
 
   .badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply inline-flex items-center px-3 py-1 rounded-sm text-xs font-medium tracking-wide;
   }
 
   .admin-sidebar-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
-           transition-all duration-200 hover:bg-rose-blush hover:text-rose-dark;
+    @apply flex items-center gap-3 px-4 py-3 rounded-sm text-sm font-medium
+           transition-all duration-200 hover:bg-nude-base hover:text-charcoal;
   }
 
   .admin-sidebar-link.active {
-    @apply bg-rose-deep text-white hover:bg-rose-dark hover:text-white;
+    @apply bg-charcoal text-white hover:bg-rose-dark hover:text-white;
   }
 }
 
-/* Scrollbar girly */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFF8F5;
+  background: #FAFAF6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #EFA8BF;
-  border-radius: 3px;
+  background: #C9B49A;
+  border-radius: 2px;
 }
