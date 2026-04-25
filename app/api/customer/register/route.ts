@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { signCustomerToken, CUSTOMER_COOKIE } from '@/lib/customerAuth'
+import { sendWelcomeEmail } from '@/lib/email'
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
       where: { customerEmail: email, customerId: null },
       data: { customerId: customer.id },
     })
+
+    sendWelcomeEmail({ name, email }).catch(err => console.error('[welcome email]', err))
 
     const token = signCustomerToken({ id: customer.id, email: customer.email, name: customer.name })
 
