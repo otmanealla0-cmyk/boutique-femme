@@ -33,7 +33,7 @@ export default function StoreHeader({ categories }: Props) {
       <div className="max-w-6xl mx-auto px-4 relative">
 
         {/* Logo centré + hamburger gauche + panier droite */}
-        <div className="flex items-center justify-between pt-3 pb-2 md:pt-5 md:pb-4 border-b border-nude-light">
+        <div className="flex items-center justify-between pt-3 pb-2 md:pt-3 md:pb-3 border-b border-nude-light">
           <button className="md:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>

@@ -6,9 +6,9 @@ interface LogoProps {
 }
 
 export default function Logo({ size = 'md', inverted = false }: LogoProps) {
-  const heights = { sm: 36, md: 52, lg: 72 }
+  const heights = { sm: 44, md: 60, lg: 64 }
   const h = heights[size]
-  const w = h * (375 / 375)
+  const w = h * (276 / 95)
 
   return (
     <Image
