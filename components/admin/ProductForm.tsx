@@ -29,7 +29,16 @@ interface ProductFormProps {
 }
 
 const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique']
-const COLOR_OPTIONS = ['Noir', 'Blanc', 'Rose', 'Beige', 'Rouge', 'Bleu', 'Vert', 'Marron', 'Gris', 'Or', 'Argent']
+const COLOR_OPTIONS = [
+  'Noir', 'Noir détail argent', 'Noir détail or',
+  'Blanc', 'Beige',
+  'Rose',
+  'Rouge vif', 'Rouge bordeaux',
+  'Bleu marine', 'Bleu',
+  'Vert', 'Kaki',
+  'Marron', 'Gris',
+  'Doré', 'Argenté', 'Jaune',
+]
 
 export default function ProductForm({ categories, product }: ProductFormProps) {
   const router = useRouter()
