@@ -2,8 +2,9 @@
 
 import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
-import { Upload, Save, X, Plus } from 'lucide-react'
+import { Save, X, Plus } from 'lucide-react'
 import Image from 'next/image'
+import { compressImage } from '@/lib/compressImage'
 
 interface Props {
   settings: Record<string, string>
@@ -21,12 +22,10 @@ export default function SettingsForm({ settings }: Props) {
   const [images, setImages] = useState<string[]>(initial)
 
   async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
-    if (file.size > 8 * 1024 * 1024) {
-      return { error: `${file.name} trop lourde (max 8 Mo)` }
-    }
     try {
+      const blob = await compressImage(file)
       const fd = new FormData()
-      fd.append('file', file)
+      fd.append('file', new File([blob], file.name, { type: 'image/jpeg' }))
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
       const data = await res.json()
       if (!res.ok) return { error: data.error || `Erreur ${res.status}` }

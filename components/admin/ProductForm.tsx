@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { compressImage } from '@/lib/compressImage'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { X, Upload, Plus, Trash2 } from 'lucide-react'
@@ -89,22 +90,25 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
     product ? JSON.parse(product.colorImages || '{}') : {}
   )
 
-  async function uploadImage(file: File) {
-    setUploading(true)
+  async function doUpload(file: File): Promise<string> {
+    const blob = await compressImage(file)
     const fd = new FormData()
-    fd.append('file', file)
+    fd.append('file', new File([blob], file.name, { type: 'image/jpeg' }))
     const res = await fetch('/api/upload', { method: 'POST', body: fd })
     const { url } = await res.json()
+    return url
+  }
+
+  async function uploadImage(file: File) {
+    setUploading(true)
+    const url = await doUpload(file)
     setImages(prev => [...prev, url])
     setUploading(false)
   }
 
   async function uploadColorImageFile(color: string, file: File) {
     setUploading(true)
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch('/api/upload', { method: 'POST', body: fd })
-    const { url } = await res.json()
+    const url = await doUpload(file)
     setColorImages(prev => ({ ...prev, [color]: [...(prev[color] || []), url] }))
     setUploading(false)
   }
