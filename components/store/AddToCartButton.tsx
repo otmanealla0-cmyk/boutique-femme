@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useCart } from '@/lib/cart'
 import toast from 'react-hot-toast'
 import { ShoppingBag } from 'lucide-react'
+import { sortSizes } from '@/lib/sortSizes'
 
 const BOX_PRICE = 10
 
@@ -25,9 +26,11 @@ interface Props {
 
 export default function AddToCartButton({ product, initialColor, onColorChange }: Props) {
   const { add } = useCart()
-  const [size, setSize] = useState(product.sizes[0] || '')
+  const sortedSizes = sortSizes(product.sizes)
+  const sortedBagSizes = sortSizes(product.bagSizes)
+  const [size, setSize] = useState(sortedSizes[0] || '')
   const [color, setColor] = useState(initialColor ?? product.colors[0] ?? '')
-  const [bagSize, setBagSize] = useState(product.bagSizes[0] || '')
+  const [bagSize, setBagSize] = useState(sortedBagSizes[0] || '')
   const [withBox, setWithBox] = useState(false)
   const [qty, setQty] = useState(1)
 
@@ -63,7 +66,7 @@ export default function AddToCartButton({ product, initialColor, onColorChange }
         <div>
           <p className="label">Taille</p>
           <div className="flex flex-wrap gap-2">
-            {product.sizes.map(s => (
+            {sortedSizes.map(s => (
               <button
                 key={s}
                 onClick={() => setSize(s)}
@@ -84,7 +87,7 @@ export default function AddToCartButton({ product, initialColor, onColorChange }
         <div>
           <p className="label">Taille du sac</p>
           <div className="flex flex-wrap gap-2">
-            {product.bagSizes.map(s => (
+            {sortedBagSizes.map(s => (
               <button
                 key={s}
                 onClick={() => setBagSize(s)}
