@@ -167,7 +167,7 @@ export async function sendAdminOrderAlert(params: {
 
   await resend.emails.send({
     from: 'Dress By Me <noreply@dressbymee.shop>',
-    to: 'otmanealla0@gmail.com',
+    to: 'dressbymee.support@gmail.com',
     subject: `🛍️ Nouvelle commande ${orderNumber} — ${total.toFixed(2)} €`,
     html,
   })
