@@ -3,9 +3,9 @@
 const REVIEWS = [
   { name: 'Inès M.', text: 'Qualité incroyable pour le prix, je recommande les yeux fermés 🔥', stars: 5 },
   { name: 'Sabrina L.', text: 'Livraison rapide et le sac est encore plus beau en vrai 😍', stars: 5 },
-  { name: 'Amira K.', text: 'Le colis était super bien emballé, j'adore ma robe !!', stars: 5 },
-  { name: 'Lina B.', text: 'Top qualité, taille bien, je vais recommander c'est sûr', stars: 5 },
-  { name: 'Yasmine R.', text: 'Je m'attendais pas à autant de qualité, franchement wow 🙌', stars: 5 },
+  { name: 'Amira K.', text: "Le colis était super bien emballé, j'adore ma robe !!", stars: 5 },
+  { name: 'Lina B.', text: "Top qualité, taille bien, je vais recommander c'est sûr", stars: 5 },
+  { name: 'Yasmine R.', text: "Je m'attendais pas à autant de qualité, franchement wow 🙌", stars: 5 },
   { name: 'Nour T.', text: 'Le sac est parfait, exactement comme sur les photos !', stars: 5 },
   { name: 'Sofia D.', text: 'Super boutique, service au top et les articles sont ouf 💅', stars: 5 },
 ]
