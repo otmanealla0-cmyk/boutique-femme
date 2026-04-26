@@ -23,9 +23,9 @@ export default function SettingsForm({ settings }: Props) {
 
   async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
     try {
-      const blob = await compressImage(file)
+      const compressed = await compressImage(file)
       const fd = new FormData()
-      fd.append('file', new File([blob], file.name, { type: 'image/jpeg' }))
+      fd.append('file', compressed)
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
       const data = await res.json()
       if (!res.ok) return { error: data.error || `Erreur ${res.status}` }

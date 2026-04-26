@@ -91,9 +91,9 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
   )
 
   async function doUpload(file: File): Promise<string> {
-    const blob = await compressImage(file)
+    const compressed = await compressImage(file)
     const fd = new FormData()
-    fd.append('file', new File([blob], file.name, { type: 'image/jpeg' }))
+    fd.append('file', compressed)
     const res = await fetch('/api/upload', { method: 'POST', body: fd })
     const { url } = await res.json()
     return url
