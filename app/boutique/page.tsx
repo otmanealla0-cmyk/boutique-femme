@@ -29,10 +29,13 @@ export default async function HomePage() {
       <section className="bg-gradient-boutique">
         <div className="max-w-6xl mx-auto px-4 py-10 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-10">
           <div className="flex-1 text-center md:text-left order-2 md:order-1">
-<h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-6 md:mb-8">
-              Les pépites<br />du moment,<br />
-              <span className="italic text-rose-deep">à prix doux</span>
+<h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-4 md:mb-6">
+              Nouvelle saison,<br />Nouveau dressing<br />
+              <span className="italic text-rose-deep text-2xl md:text-3xl">pour dead tes outfits</span>
             </h1>
+            <p className="text-nude-dark text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto md:mx-0">
+              Retrouve ici tes pépites du moment à prix doux
+            </p>
             <Link href="/boutique/produits" className="btn-primary inline-flex items-center gap-2">
               Découvrir la boutique
               <ArrowRight size={18} />
