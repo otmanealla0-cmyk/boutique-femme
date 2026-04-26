@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import OrderStatusSelect from '@/components/admin/OrderStatusSelect'
 import OrderDeleteButton from '@/components/admin/OrderDeleteButton'
 import OrderStatusFilter from '@/components/admin/OrderStatusFilter'
+import ResendEmailButton from '@/components/admin/ResendEmailButton'
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -83,6 +84,7 @@ export default async function AdminOrders({
                 <div className="text-right flex flex-col items-end gap-2">
                   <p className="text-xl font-playfair font-bold text-charcoal">{order.total.toFixed(2)} €</p>
                   <OrderStatusSelect orderId={order.id} currentStatus={order.status} />
+                  <ResendEmailButton orderId={order.id} />
                   <OrderDeleteButton orderId={order.id} />
                 </div>
               </div>
