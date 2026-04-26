@@ -6,7 +6,7 @@ import Image from 'next/image'
 export default async function AdminProducts() {
   const products = await prisma.product.findMany({
     include: { category: true },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: 'asc' },
   })
 
   return (

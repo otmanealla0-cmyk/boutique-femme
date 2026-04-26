@@ -19,7 +19,7 @@ export default async function ProduitsPage({
         ...(q ? { name: { contains: q } } : {}),
       },
       include: { category: true },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: 'asc' },
     }),
   ])
 
