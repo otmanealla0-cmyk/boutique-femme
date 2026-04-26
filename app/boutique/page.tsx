@@ -33,7 +33,7 @@ export default async function HomePage() {
               Nouvelle collection
             </p>
             <h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-4 md:mb-6">
-              Mode & Élégance<br />
+              Habille ton mood<br />
               <span className="italic text-rose-deep text-2xl md:text-3xl">pour dead tes outfits</span>
             </h1>
             <p className="text-nude-dark text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto md:mx-0">
