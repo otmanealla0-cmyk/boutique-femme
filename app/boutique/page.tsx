@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import HeroCarousel from '@/components/store/HeroCarousel'
+import ReviewsBanner from '@/components/store/ReviewsBanner'
 
 export default async function HomePage() {
   const [heroSetting, heroImagesSetting] = await Promise.all([
@@ -25,6 +26,8 @@ export default async function HomePage() {
 
   return (
     <div>
+      <ReviewsBanner />
+
       {/* Hero */}
       <section className="bg-gradient-boutique">
         <div className="max-w-6xl mx-auto px-4 py-10 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-10">
