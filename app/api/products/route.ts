@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const body = await req.json()
-  const { name, description, price, stock, images, sizes, colors, featured, categoryId } = body
+  const { name, description, price, stock, images, sizes, colors, bagSizes, hasBoxOption, colorImages, featured, categoryId } = body
 
   if (!name || !price || !categoryId) {
     return NextResponse.json({ error: 'Champs requis manquants' }, { status: 400 })
@@ -42,6 +42,9 @@ export async function POST(req: NextRequest) {
       images: JSON.stringify(images || []),
       sizes: JSON.stringify(sizes || []),
       colors: JSON.stringify(colors || []),
+      bagSizes: JSON.stringify(bagSizes || []),
+      hasBoxOption: hasBoxOption || false,
+      colorImages: JSON.stringify(colorImages || {}),
       featured: featured || false,
       categoryId,
     },

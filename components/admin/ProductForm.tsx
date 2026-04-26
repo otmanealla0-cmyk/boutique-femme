@@ -24,6 +24,7 @@ interface ProductFormProps {
     colors: string
     bagSizes: string
     hasBoxOption: boolean
+    colorImages: string
     featured: boolean
     active: boolean
     categoryId: string
@@ -47,6 +48,8 @@ const COLOR_OPTIONS = [
 export default function ProductForm({ categories, product }: ProductFormProps) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
+  const colorFileRef = useRef<HTMLInputElement>(null)
+  const uploadingColorRef = useRef<string | null>(null)
   const isEdit = !!product
 
   const [loading, setLoading] = useState(false)
@@ -73,6 +76,9 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
     product ? JSON.parse(product.bagSizes || '[]') : []
   )
   const [hasBoxOption, setHasBoxOption] = useState(product?.hasBoxOption || false)
+  const [colorImages, setColorImages] = useState<Record<string, string[]>>(
+    product ? JSON.parse(product.colorImages || '{}') : {}
+  )
 
   async function uploadImage(file: File) {
     setUploading(true)
@@ -84,12 +90,27 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
     setUploading(false)
   }
 
+  async function uploadColorImageFile(color: string, file: File) {
+    setUploading(true)
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await fetch('/api/upload', { method: 'POST', body: fd })
+    const { url } = await res.json()
+    setColorImages(prev => ({ ...prev, [color]: [...(prev[color] || []), url] }))
+    setUploading(false)
+  }
+
+  function triggerColorUpload(color: string) {
+    uploadingColorRef.current = color
+    colorFileRef.current?.click()
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.categoryId) return toast.error('Sélectionnez une catégorie')
 
     setLoading(true)
-    const payload = { ...form, images, sizes, colors, bagSizes, hasBoxOption }
+    const payload = { ...form, images, sizes, colors, bagSizes, hasBoxOption, colorImages }
 
     const res = await fetch(
       isEdit ? `/api/products/${product!.id}` : '/api/products',
@@ -190,6 +211,20 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
               multiple
               onChange={e => {
                 Array.from(e.target.files || []).forEach(uploadImage)
+                e.target.value = ''
+              }}
+            />
+            <input
+              ref={colorFileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              multiple
+              onChange={e => {
+                const color = uploadingColorRef.current
+                if (!color) return
+                Array.from(e.target.files || []).forEach(f => uploadColorImageFile(color, f))
+                uploadingColorRef.current = null
                 e.target.value = ''
               }}
             />
@@ -298,6 +333,50 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
               ))}
             </div>
           </div>
+
+          {colors.length > 0 && (
+            <div className="card p-6 space-y-5">
+              <div>
+                <h2 className="font-playfair text-lg font-semibold text-charcoal">Photos par couleur</h2>
+                <p className="text-xs text-nude-dark mt-1">Optionnel — si non renseignées, les photos principales s&apos;affichent pour toutes les couleurs</p>
+              </div>
+              {colors.map(color => (
+                <div key={color} className="space-y-2">
+                  <p className="text-sm font-medium text-charcoal">{color}</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {(colorImages[color] || []).map((url, i) => (
+                      <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-nude-base">
+                        <Image src={url} alt="" fill className="object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setColorImages(prev => ({
+                              ...prev,
+                              [color]: (prev[color] || []).filter((_, j) => j !== i),
+                            }))
+                          }}
+                          className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow hover:bg-red-50"
+                        >
+                          <X size={10} className="text-red-500" />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => triggerColorUpload(color)}
+                      disabled={uploading}
+                      className="aspect-square rounded-lg border-2 border-dashed border-nude-medium
+                                 flex flex-col items-center justify-center gap-1 text-nude-dark
+                                 hover:border-rose-soft hover:text-rose-deep transition-colors"
+                    >
+                      <Upload size={14} />
+                      <span className="text-xs">Photo</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">

@@ -19,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const { id } = await params
   const body = await req.json()
-  const { name, description, price, stock, images, sizes, colors, featured, active, categoryId } = body
+  const { name, description, price, stock, images, sizes, colors, bagSizes, hasBoxOption, colorImages, featured, active, categoryId } = body
 
   const product = await prisma.product.update({
     where: { id },
@@ -31,6 +31,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       images: JSON.stringify(images || []),
       sizes: JSON.stringify(sizes || []),
       colors: JSON.stringify(colors || []),
+      bagSizes: JSON.stringify(bagSizes || []),
+      hasBoxOption: hasBoxOption || false,
+      colorImages: JSON.stringify(colorImages || {}),
       featured,
       active,
       categoryId,

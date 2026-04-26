@@ -3,8 +3,8 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
-  title: 'Boutique Élégance – Mode Femme',
-  description: 'Vêtements et sacs tendance pour femmes',
+  title: 'Dress By Me',
+  description: 'Mode femme – Vêtements, sacs et accessoires tendance',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

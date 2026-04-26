@@ -33,6 +33,7 @@ model Product {
   colors       String      @default("[]")
   bagSizes     String      @default("[]")
   hasBoxOption Boolean     @default(false)
+  colorImages  String      @default("{}")
   featured     Boolean     @default(false)
   active      Boolean     @default(true)
   categoryId  String

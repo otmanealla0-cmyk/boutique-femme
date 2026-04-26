@@ -19,12 +19,14 @@ interface Props {
     hasBoxOption: boolean
     stock: number
   }
+  initialColor?: string
+  onColorChange?: (color: string) => void
 }
 
-export default function AddToCartButton({ product }: Props) {
+export default function AddToCartButton({ product, initialColor, onColorChange }: Props) {
   const { add } = useCart()
   const [size, setSize] = useState(product.sizes[0] || '')
-  const [color, setColor] = useState(product.colors[0] || '')
+  const [color, setColor] = useState(initialColor ?? product.colors[0] ?? '')
   const [bagSize, setBagSize] = useState(product.bagSizes[0] || '')
   const [withBox, setWithBox] = useState(false)
   const [qty, setQty] = useState(1)
@@ -124,7 +126,7 @@ export default function AddToCartButton({ product }: Props) {
             {product.colors.map(c => (
               <button
                 key={c}
-                onClick={() => setColor(c)}
+                onClick={() => { setColor(c); onColorChange?.(c) }}
                 className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all ${
                   color === c
                     ? 'bg-rose-deep border-rose-deep text-white'
