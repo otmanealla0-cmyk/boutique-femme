@@ -41,6 +41,7 @@ const COLOR_OPTIONS = [
   'Vert', 'Kaki',
   'Marron', 'Gris',
   'Doré', 'Argenté', 'Jaune',
+  'Orange', 'Fuchsia', 'Bleu ciel', 'Pailletée',
 ]
 
 export default function ProductForm({ categories, product }: ProductFormProps) {
