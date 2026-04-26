@@ -127,6 +127,52 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
   })
 }
 
+export async function sendAdminOrderAlert(params: {
+  orderNumber: string
+  customerName: string
+  customerEmail: string
+  total: number
+  items: OrderItem[]
+  city: string
+  country: string
+}) {
+  const { orderNumber, customerName, customerEmail, total, items, city, country } = params
+
+  const itemsText = items.map(i => {
+    const details = [i.size, i.color].filter(Boolean).join(' · ')
+    return `• ${i.product.name}${details ? ` (${details})` : ''} × ${i.quantity} — ${(i.price * i.quantity).toFixed(2)} €`
+  }).join('<br>')
+
+  const html = `
+    <div style="font-family:Arial,sans-serif; max-width:480px; margin:0 auto; padding:24px; background:#fff; border:1px solid #eee;">
+      <p style="font-size:22px; font-weight:700; color:#1A1512; margin:0 0 4px;">🛍️ Nouvelle commande !</p>
+      <p style="font-size:13px; color:#9E8E7C; margin:0 0 20px;">${orderNumber}</p>
+
+      <p style="margin:0 0 6px; font-size:14px; color:#1A1512;"><strong>Client :</strong> ${customerName}</p>
+      <p style="margin:0 0 6px; font-size:14px; color:#1A1512;"><strong>Email :</strong> ${customerEmail}</p>
+      <p style="margin:0 0 20px; font-size:14px; color:#1A1512;"><strong>Ville :</strong> ${city}, ${country}</p>
+
+      <div style="background:#F2EBE0; padding:14px 18px; margin-bottom:20px; font-size:14px; color:#1A1512; line-height:1.8;">
+        ${itemsText}
+      </div>
+
+      <p style="font-size:16px; font-weight:700; color:#8B7355; margin:0 0 20px;">Total : ${total.toFixed(2)} €</p>
+
+      <a href="https://dressbymee.shop/admin/orders"
+         style="display:inline-block; background:#1A1512; color:#fff; text-decoration:none; padding:12px 24px; font-size:13px; letter-spacing:2px; text-transform:uppercase;">
+        Voir la commande
+      </a>
+    </div>
+  `
+
+  await resend.emails.send({
+    from: 'Dress By Me <noreply@dressbymee.shop>',
+    to: 'otmanealla0@gmail.com',
+    subject: `🛍️ Nouvelle commande ${orderNumber} — ${total.toFixed(2)} €`,
+    html,
+  })
+}
+
 export async function sendWelcomeEmail({ name, email }: { name: string; email: string }) {
   const html = `
     <!DOCTYPE html>

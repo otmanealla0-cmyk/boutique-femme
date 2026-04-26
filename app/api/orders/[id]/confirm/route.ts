@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { sendOrderConfirmation } from '@/lib/email'
+import { sendOrderConfirmation, sendAdminOrderAlert } from '@/lib/email'
 
 export async function POST(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -23,7 +23,17 @@ export async function POST(_: NextRequest, { params }: { params: Promise<{ id: s
       address: order.address,
       postalCode: order.postalCode,
       city: order.city,
-    }).catch(err => console.error('[email]', err))
+    }).catch(err => console.error('[email client]', err))
+
+    await sendAdminOrderAlert({
+      orderNumber: order.orderNumber,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      total: order.total,
+      items: order.items,
+      city: order.city,
+      country: order.country,
+    }).catch(err => console.error('[email admin]', err))
   }
 
   return NextResponse.json({ ok: true })
