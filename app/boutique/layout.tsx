@@ -1,5 +1,6 @@
 import { CartProvider } from '@/lib/cart'
 import StoreHeader from '@/components/store/Header'
+import WelcomePopup from '@/components/store/WelcomePopup'
 import Logo from '@/components/Logo'
 import { prisma } from '@/lib/prisma'
 import Script from 'next/script'
@@ -16,10 +17,8 @@ export default async function StoreLayout({ children }: { children: React.ReactN
     <CartProvider>
       <Script src="https://gateway.sumup.com/gateway/ecom/card/v2/sdk.js" strategy="afterInteractive" />
       <div className="min-h-screen flex flex-col">
-        <div className="bg-charcoal text-nude-base text-center text-xs py-2.5 px-4 font-medium tracking-wide">
-          🚚 Livraison gratuite dans toute l&apos;Europe
-        </div>
         <StoreHeader categories={categories} />
+        <WelcomePopup />
         <main className="flex-1">{children}</main>
         <footer className="bg-charcoal text-nude-base py-10 mt-16">
           <div className="max-w-6xl mx-auto px-4 text-center">
