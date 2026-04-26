@@ -26,7 +26,14 @@ export default async function StoreLayout({ children }: { children: React.ReactN
               <Logo size="md" inverted />
             </div>
             <p className="text-sm text-nude-dark">Mode femme – Vêtements & Sacs tendance</p>
-            <p className="text-xs text-nude-dark mt-4">© {new Date().getFullYear()} Dress By Me. Tous droits réservés.</p>
+            <div className="flex justify-center gap-4 mt-4 text-xs text-nude-dark">
+              <a href="/boutique/mentions-legales" className="hover:text-nude-base transition-colors">Mentions légales</a>
+              <span>·</span>
+              <a href="/boutique/cgv" className="hover:text-nude-base transition-colors">CGV</a>
+              <span>·</span>
+              <a href="/boutique/confidentialite" className="hover:text-nude-base transition-colors">Confidentialité</a>
+            </div>
+            <p className="text-xs text-nude-dark mt-3">© {new Date().getFullYear()} Dress By Me. Tous droits réservés.</p>
           </div>
         </footer>
       </div>
