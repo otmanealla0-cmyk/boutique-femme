@@ -46,13 +46,14 @@ const BAG_SIZE_OPTIONS = ['16cm', '20cm', '25cm', '30cm', '35cm', '45cm']
 const COLOR_OPTIONS = [
   'Noir', 'Noir détail argent', 'Noir détail or',
   'Blanc', 'Beige',
-  'Rose',
+  'Rose', 'Rose claire',
   'Rouge vif', 'Rouge bordeaux',
-  'Bleu marine', 'Bleu',
-  'Vert', 'Kaki',
+  'Bleu marine', 'Bleu', 'Bleu clair', 'Bleu foncé', 'Bleu ciel',
+  'Vert', 'Vert eau', 'Kaki',
+  'Violet', 'Mauve',
   'Marron', 'Gris',
   'Doré', 'Argenté', 'Jaune',
-  'Orange', 'Fuchsia', 'Bleu ciel', 'Pailletée',
+  'Orange', 'Fuchsia', 'Pailletée',
 ]
 
 export default function ProductForm({ categories, product }: ProductFormProps) {
