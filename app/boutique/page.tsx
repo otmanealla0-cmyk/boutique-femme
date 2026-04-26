@@ -30,7 +30,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 py-10 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-10">
           <div className="flex-1 text-center md:text-left order-2 md:order-1">
 <h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-4 md:mb-6">
-              Nouvelle saison,<br />Nouveau dressing<br />
+              Les pépites du moment,<br />à prix doux<br />
               <span className="italic text-rose-deep text-2xl md:text-3xl">pour dead tes outfits</span>
             </h1>
             <p className="text-nude-dark text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto md:mx-0">
