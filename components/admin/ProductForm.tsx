@@ -28,7 +28,7 @@ interface ProductFormProps {
   }
 }
 
-const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique']
+const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique', '34', '36', '38', '40', '42', '44', '46']
 const COLOR_OPTIONS = [
   'Noir', 'Noir détail argent', 'Noir détail or',
   'Blanc', 'Beige',
