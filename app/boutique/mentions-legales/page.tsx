@@ -7,10 +7,7 @@ export default function MentionsLegales() {
         <h2 className="font-semibold text-charcoal">Éditeur du site</h2>
         <p className="text-charcoal/70 text-sm leading-relaxed">
           Dress By Me<br />
-          Propriétaire : [À compléter]<br />
-          Adresse : [À compléter]<br />
-          Email : dressbymee@gmail.com<br />
-          SIRET : [À compléter]
+          Email : dressbymee@gmail.com
         </p>
       </section>
 
