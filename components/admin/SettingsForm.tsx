@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import { Upload, Save } from 'lucide-react'
+import { Upload, Save, X, Plus } from 'lucide-react'
 import Image from 'next/image'
 
 interface Props {
@@ -13,9 +13,14 @@ interface Props {
 export default function SettingsForm({ settings }: Props) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
-  const [heroImage, setHeroImage] = useState(settings.hero_image || '/hero.jpg')
   const [uploading, setUploading] = useState(false)
   const [saving, setSaving] = useState(false)
+
+  const initial: string[] = settings.hero_images
+    ? JSON.parse(settings.hero_images)
+    : [settings.hero_image || '/hero.jpg']
+
+  const [images, setImages] = useState<string[]>(initial)
 
   async function handleUpload(file: File) {
     setUploading(true)
@@ -23,9 +28,13 @@ export default function SettingsForm({ settings }: Props) {
     fd.append('file', file)
     const res = await fetch('/api/upload', { method: 'POST', body: fd })
     const { url } = await res.json()
-    setHeroImage(url)
+    setImages(prev => [...prev, url])
     setUploading(false)
-    toast.success('Image chargée !')
+    toast.success('Image ajoutée !')
+  }
+
+  function removeImage(index: number) {
+    setImages(prev => prev.filter((_, i) => i !== index))
   }
 
   async function handleSave() {
@@ -33,7 +42,10 @@ export default function SettingsForm({ settings }: Props) {
     const res = await fetch('/api/settings', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ hero_image: heroImage }),
+      body: JSON.stringify({
+        hero_images: JSON.stringify(images),
+        hero_image: images[0] || '/hero.jpg',
+      }),
     })
     setSaving(false)
     if (res.ok) {
@@ -48,20 +60,47 @@ export default function SettingsForm({ settings }: Props) {
     <div className="max-w-2xl space-y-6">
       <div className="card p-6 space-y-5">
         <h2 className="font-playfair text-lg font-semibold text-charcoal">
-          Image principale (page d&apos;accueil)
+          Images du carousel (page d&apos;accueil)
         </h2>
+        <p className="text-sm text-nude-dark">Les images défilent automatiquement toutes les 4 secondes.</p>
 
-        {/* Aperçu */}
-        <div className="relative w-full aspect-square max-w-xs rounded-2xl overflow-hidden bg-nude-base">
-          <Image
-            src={heroImage}
-            alt="Image hero"
-            fill
-            className="object-cover"
-          />
+        <div className="grid grid-cols-3 gap-3">
+          {images.map((src, i) => (
+            <div key={src + i} className="relative aspect-square rounded-xl overflow-hidden bg-nude-base group">
+              <Image src={src} alt={`Hero ${i + 1}`} fill className="object-cover" />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button
+                  onClick={() => removeImage(i)}
+                  className="bg-white text-red-500 rounded-full p-1.5 hover:bg-red-50 transition-colors"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              {i === 0 && (
+                <span className="absolute top-1 left-1 bg-charcoal text-white text-[9px] px-1.5 py-0.5 rounded-sm">
+                  Principale
+                </span>
+              )}
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            className="aspect-square rounded-xl border-2 border-dashed border-nude-medium flex flex-col items-center justify-center gap-2 hover:border-charcoal hover:bg-nude-base transition-colors text-nude-dark hover:text-charcoal"
+          >
+            {uploading ? (
+              <span className="animate-spin text-xl">◌</span>
+            ) : (
+              <>
+                <Plus size={20} />
+                <span className="text-xs">Ajouter</span>
+              </>
+            )}
+          </button>
         </div>
 
-        {/* Upload */}
         <input
           ref={fileRef}
           type="file"
@@ -73,20 +112,6 @@ export default function SettingsForm({ settings }: Props) {
             e.target.value = ''
           }}
         />
-
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-          className="btn-secondary flex items-center gap-2"
-        >
-          {uploading ? (
-            <span className="animate-spin">◌</span>
-          ) : (
-            <Upload size={16} />
-          )}
-          {uploading ? 'Chargement...' : 'Changer l\'image'}
-        </button>
       </div>
 
       <button
@@ -95,7 +120,7 @@ export default function SettingsForm({ settings }: Props) {
         className="btn-primary flex items-center gap-2"
       >
         {saving ? <span className="animate-spin">◌</span> : <Save size={16} />}
-        Enregistrer les paramètres
+        Enregistrer
       </button>
     </div>
   )

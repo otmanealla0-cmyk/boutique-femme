@@ -4,10 +4,17 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
+import HeroCarousel from '@/components/store/HeroCarousel'
 
 export default async function HomePage() {
-  const heroSetting = await prisma.setting.findUnique({ where: { key: 'hero_image' } })
-  const heroImage = heroSetting?.value || '/hero.jpg'
+  const [heroSetting, heroImagesSetting] = await Promise.all([
+    prisma.setting.findUnique({ where: { key: 'hero_image' } }),
+    prisma.setting.findUnique({ where: { key: 'hero_images' } }),
+  ])
+
+  const heroImages: string[] = heroImagesSetting?.value
+    ? JSON.parse(heroImagesSetting.value)
+    : [heroSetting?.value || '/hero.jpg']
 
   const featured = await prisma.product.findMany({
     where: { active: true, featured: true },
@@ -38,18 +45,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="flex-1 flex justify-center order-1 md:order-2">
-            <div className="relative w-56 h-64 sm:w-72 sm:h-80 md:w-96 md:h-[420px]">
-              <div className="absolute inset-0 bg-rose-blush rounded-[40px] rotate-3" />
-              <div className="absolute inset-2 rounded-[35px] overflow-hidden -rotate-1">
-                <Image
-                  src={heroImage}
-                  alt="Dress By Me"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </div>
+            <HeroCarousel images={heroImages} />
           </div>
         </div>
       </section>
