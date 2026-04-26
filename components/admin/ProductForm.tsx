@@ -22,6 +22,8 @@ interface ProductFormProps {
     images: string
     sizes: string
     colors: string
+    bagSizes: string
+    hasBoxOption: boolean
     featured: boolean
     active: boolean
     categoryId: string
@@ -29,6 +31,7 @@ interface ProductFormProps {
 }
 
 const SIZE_OPTIONS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unique', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46']
+const BAG_SIZE_OPTIONS = ['16cm', '20cm', '25cm', '30cm', '35cm', '45cm']
 const COLOR_OPTIONS = [
   'Noir', 'Noir détail argent', 'Noir détail or',
   'Blanc', 'Beige',
@@ -65,6 +68,10 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
   const [colors, setColors] = useState<string[]>(
     product ? JSON.parse(product.colors || '[]') : []
   )
+  const [bagSizes, setBagSizes] = useState<string[]>(
+    product ? JSON.parse(product.bagSizes || '[]') : []
+  )
+  const [hasBoxOption, setHasBoxOption] = useState(product?.hasBoxOption || false)
 
   async function uploadImage(file: File) {
     setUploading(true)
@@ -81,7 +88,7 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
     if (!form.categoryId) return toast.error('Sélectionnez une catégorie')
 
     setLoading(true)
-    const payload = { ...form, images, sizes, colors }
+    const payload = { ...form, images, sizes, colors, bagSizes, hasBoxOption }
 
     const res = await fetch(
       isEdit ? `/api/products/${product!.id}` : '/api/products',
@@ -236,6 +243,39 @@ export default function ProductForm({ categories, product }: ProductFormProps) {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="card p-6 space-y-4">
+            <h2 className="font-playfair text-lg font-semibold text-charcoal">Tailles sac (cm)</h2>
+            <div className="flex flex-wrap gap-2">
+              {BAG_SIZE_OPTIONS.map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => toggleItem(bagSizes, setBagSizes, s)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all ${
+                    bagSizes.includes(s)
+                      ? 'bg-rose-deep border-rose-deep text-white'
+                      : 'border-nude-medium text-charcoal hover:border-rose-soft'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="card p-6 space-y-4">
+            <h2 className="font-playfair text-lg font-semibold text-charcoal">Option boîte</h2>
+            <label className="flex items-center gap-3 cursor-pointer">
+              <div
+                onClick={() => setHasBoxOption(v => !v)}
+                className={`w-11 h-6 rounded-full transition-colors relative ${hasBoxOption ? 'bg-rose-deep' : 'bg-nude-medium'}`}
+              >
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform ${hasBoxOption ? 'translate-x-6' : 'translate-x-1'}`} />
+              </div>
+              <span className="text-sm font-medium text-charcoal">Proposer l&apos;option boîte (+10 €)</span>
+            </label>
           </div>
 
           <div className="card p-6 space-y-4">

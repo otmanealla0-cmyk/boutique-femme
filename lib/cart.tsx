@@ -9,6 +9,8 @@ export interface CartItem {
   image: string
   size: string
   color: string
+  bagSize: string
+  withBox: boolean
   quantity: number
 }
 
@@ -36,8 +38,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('boutique-cart', JSON.stringify(items))
   }, [items])
 
-  function key(item: Pick<CartItem, 'productId' | 'size' | 'color'>) {
-    return `${item.productId}-${item.size}-${item.color}`
+  function key(item: Pick<CartItem, 'productId' | 'size' | 'color' | 'bagSize' | 'withBox'>) {
+    return `${item.productId}-${item.size}-${item.color}-${item.bagSize}-${item.withBox}`
   }
 
   function add(item: CartItem) {
@@ -50,13 +52,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  function remove(productId: string, size: string, color: string) {
-    setItems(prev => prev.filter(i => key(i) !== key({ productId, size, color })))
+  function remove(productId: string, size: string, color: string, bagSize = '', withBox = false) {
+    setItems(prev => prev.filter(i => key(i) !== key({ productId, size, color, bagSize, withBox })))
   }
 
-  function update(productId: string, size: string, color: string, quantity: number) {
-    if (quantity <= 0) return remove(productId, size, color)
-    setItems(prev => prev.map(i => key(i) === key({ productId, size, color }) ? { ...i, quantity } : i))
+  function update(productId: string, size: string, color: string, quantity: number, bagSize = '', withBox = false) {
+    if (quantity <= 0) return remove(productId, size, color, bagSize, withBox)
+    setItems(prev => prev.map(i => key(i) === key({ productId, size, color, bagSize, withBox }) ? { ...i, quantity } : i))
   }
 
   function clear() { setItems([]) }

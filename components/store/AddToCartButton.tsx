@@ -5,6 +5,8 @@ import { useCart } from '@/lib/cart'
 import toast from 'react-hot-toast'
 import { ShoppingBag } from 'lucide-react'
 
+const BOX_PRICE = 10
+
 interface Props {
   product: {
     id: string
@@ -13,6 +15,8 @@ interface Props {
     image: string
     sizes: string[]
     colors: string[]
+    bagSizes: string[]
+    hasBoxOption: boolean
     stock: number
   }
 }
@@ -21,17 +25,23 @@ export default function AddToCartButton({ product }: Props) {
   const { add } = useCart()
   const [size, setSize] = useState(product.sizes[0] || '')
   const [color, setColor] = useState(product.colors[0] || '')
+  const [bagSize, setBagSize] = useState(product.bagSizes[0] || '')
+  const [withBox, setWithBox] = useState(false)
   const [qty, setQty] = useState(1)
+
+  const finalPrice = product.price + (withBox ? BOX_PRICE : 0)
 
   function handleAdd() {
     if (product.stock === 0) return toast.error('Produit épuisé')
     add({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: finalPrice,
       image: product.image,
       size,
       color,
+      bagSize,
+      withBox,
       quantity: qty,
     })
     toast.success('Ajouté au panier !')
@@ -65,6 +75,45 @@ export default function AddToCartButton({ product }: Props) {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {product.bagSizes.length > 0 && (
+        <div>
+          <p className="label">Taille du sac</p>
+          <div className="flex flex-wrap gap-2">
+            {product.bagSizes.map(s => (
+              <button
+                key={s}
+                onClick={() => setBagSize(s)}
+                className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all ${
+                  bagSize === s
+                    ? 'bg-charcoal border-charcoal text-white'
+                    : 'border-nude-medium text-charcoal hover:border-charcoal'
+                }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {product.hasBoxOption && (
+        <div>
+          <p className="label">Option boîte</p>
+          <button
+            onClick={() => setWithBox(v => !v)}
+            className={`flex items-center gap-3 px-4 py-3 border-2 rounded-sm transition-all w-full ${
+              withBox ? 'border-charcoal bg-charcoal text-white' : 'border-nude-medium text-charcoal hover:border-charcoal'
+            }`}
+          >
+            <span className={`w-5 h-5 rounded-sm border-2 flex items-center justify-center flex-shrink-0 ${withBox ? 'border-white bg-white' : 'border-current'}`}>
+              {withBox && <span className="text-charcoal text-xs font-bold">✓</span>}
+            </span>
+            <span className="text-sm font-medium">Avec boîte cadeau</span>
+            <span className="ml-auto text-sm font-bold">+{BOX_PRICE} €</span>
+          </button>
         </div>
       )}
 
@@ -110,7 +159,7 @@ export default function AddToCartButton({ product }: Props) {
 
       <button onClick={handleAdd} className="btn-primary w-full flex items-center justify-center gap-2">
         <ShoppingBag size={18} />
-        Ajouter au panier — {(product.price * qty).toFixed(2)} €
+        Ajouter au panier — {(finalPrice * qty).toFixed(2)} €
       </button>
     </div>
   )

@@ -17,6 +17,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
   const images = JSON.parse(product.images || '[]') as string[]
   const sizes = JSON.parse(product.sizes || '[]') as string[]
   const colors = JSON.parse(product.colors || '[]') as string[]
+  const bagSizes = JSON.parse(product.bagSizes || '[]') as string[]
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 md:py-10">
@@ -51,6 +52,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               image: images[0] || '',
               sizes,
               colors,
+              bagSizes,
+              hasBoxOption: product.hasBoxOption,
               stock: product.stock,
             }}
           />
