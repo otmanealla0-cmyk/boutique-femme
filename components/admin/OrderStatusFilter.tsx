@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 const FILTERS = [
   { value: '', label: 'Toutes' },
@@ -18,8 +19,10 @@ interface Props {
 
 export default function OrderStatusFilter({ counts, current }: Props) {
   const router = useRouter()
+  const [selected, setSelected] = useState(current)
 
   function select(value: string) {
+    setSelected(value)
     router.push(value ? `/admin/orders?status=${value}` : '/admin/orders')
   }
 
@@ -29,7 +32,7 @@ export default function OrderStatusFilter({ counts, current }: Props) {
     <div className="flex flex-wrap gap-2">
       {FILTERS.map(f => {
         const count = f.value ? (counts[f.value] ?? 0) : total
-        const active = current === f.value
+        const active = selected === f.value
         return (
           <button
             key={f.value}
