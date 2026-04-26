@@ -55,6 +55,8 @@ export default function CheckoutPage() {
           quantity: i.quantity,
           size: i.size,
           color: i.color,
+          bagSize: i.bagSize,
+          withBox: i.withBox,
         })),
       }),
     })

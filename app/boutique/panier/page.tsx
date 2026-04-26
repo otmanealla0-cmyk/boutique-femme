@@ -47,21 +47,21 @@ export default function CartPage() {
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => update(item.productId, item.size, item.color, item.quantity - 1)}
+                      onClick={() => update(item.productId, item.size, item.color, item.quantity - 1, item.bagSize, item.withBox)}
                       className="w-7 h-7 rounded-full bg-nude-base hover:bg-nude-medium flex items-center justify-center"
                     >
                       <Minus size={12} />
                     </button>
                     <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
                     <button
-                      onClick={() => update(item.productId, item.size, item.color, item.quantity + 1)}
+                      onClick={() => update(item.productId, item.size, item.color, item.quantity + 1, item.bagSize, item.withBox)}
                       className="w-7 h-7 rounded-full bg-nude-base hover:bg-nude-medium flex items-center justify-center"
                     >
                       <Plus size={12} />
                     </button>
                   </div>
                   <button
-                    onClick={() => remove(item.productId, item.size, item.color)}
+                    onClick={() => remove(item.productId, item.size, item.color, item.bagSize, item.withBox)}
                     className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   >
                     <Trash2 size={15} />

@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       total,
       ...(loggedInCustomer ? { customerId: loggedInCustomer.id } : {}),
       items: {
-        create: items.map((item: { productId: string; quantity: number; size?: string; color?: string }) => {
+        create: items.map((item: { productId: string; quantity: number; size?: string; color?: string; bagSize?: string; withBox?: boolean }) => {
           const p = products.find(p => p.id === item.productId)
           return {
             productId: item.productId,
@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
             price: p?.price || 0,
             size: item.size || '',
             color: item.color || '',
+            bagSize: item.bagSize || '',
+            withBox: item.withBox || false,
           }
         }),
       },

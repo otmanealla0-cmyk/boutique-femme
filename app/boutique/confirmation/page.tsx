@@ -58,7 +58,7 @@ export default async function ConfirmationPage({
           </div>
 
           <div className="mt-4 pt-4 border-t border-nude-light text-sm text-nude-dark space-y-1">
-            <p>📦 Livraison à : {order.address}, {order.postalCode} {order.city}</p>
+            <p>📦 Livraison à : {order.address}, {order.postalCode} {order.city}{order.country ? `, ${order.country}` : ''}</p>
             <p>✉️ Confirmation envoyée à : {order.customerEmail}</p>
           </div>
         </div>
