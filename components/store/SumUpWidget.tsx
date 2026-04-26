@@ -37,9 +37,11 @@ export default function SumUpWidget({ checkoutId, onSuccess, onError }: Props) {
         locale: 'fr-FR',
         showInstallments: false,
         onResponse: (type, body) => {
-          if (type === 'success') onSuccess()
-          else if (type === 'error' || type === 'fail')
-            onError((body?.message as string) || 'Paiement refusé')
+          if (type === 'success' && body?.status !== 'FAILED') {
+            onSuccess()
+          } else if (type === 'error' || type === 'fail' || body?.status === 'FAILED') {
+            onError((body?.message as string) || 'Paiement refusé, veuillez réessayer.')
+          }
         },
       })
     }

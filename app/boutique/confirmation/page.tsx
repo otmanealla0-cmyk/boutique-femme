@@ -20,10 +20,6 @@ export default async function ConfirmationPage({
       })
     : null
 
-  if (order && order.status === 'pending') {
-    await prisma.order.update({ where: { id: orderId! }, data: { status: 'paid' } })
-    order = { ...order, status: 'paid' }
-  }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-16 text-center">
