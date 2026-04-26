@@ -29,10 +29,7 @@ export default async function HomePage() {
       <section className="bg-gradient-boutique">
         <div className="max-w-6xl mx-auto px-4 py-10 md:py-20 flex flex-col md:flex-row items-center gap-8 md:gap-10">
           <div className="flex-1 text-center md:text-left order-2 md:order-1">
-            <p className="text-rose-deep text-xs font-medium tracking-widest uppercase mb-3">
-              Nouvelle collection
-            </p>
-            <h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-4 md:mb-6">
+<h1 className="text-4xl md:text-6xl font-playfair text-charcoal leading-tight mb-4 md:mb-6">
               Habille ton mood<br />
               <span className="italic text-rose-deep text-2xl md:text-3xl">pour dead tes outfits</span>
             </h1>
