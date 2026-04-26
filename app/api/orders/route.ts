@@ -20,10 +20,14 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json()
-  const { customerName, customerEmail, customerPhone, address, city, postalCode, items } = body
+  const { customerName, customerEmail, customerPhone, address, city, postalCode, country, items } = body
 
   if (!customerName || !customerEmail || !items?.length) {
     return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })
+  }
+
+  if (country === 'Suisse') {
+    return NextResponse.json({ error: 'Nous ne livrons pas en Suisse.' }, { status: 400 })
   }
 
   const productIds = items.map((i: { productId: string }) => i.productId)
@@ -46,6 +50,7 @@ export async function POST(req: NextRequest) {
       address: address || '',
       city: city || '',
       postalCode: postalCode || '',
+      country: country || 'France',
       total,
       ...(loggedInCustomer ? { customerId: loggedInCustomer.id } : {}),
       items: {

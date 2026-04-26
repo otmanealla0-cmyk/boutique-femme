@@ -54,6 +54,7 @@ model Order {
   address        String      @default("")
   city           String      @default("")
   postalCode     String      @default("")
+  country        String      @default("France")
   sumupCheckoutId String     @default("")
   customerId     String?
   customer       Customer?   @relation(fields: [customerId], references: [id])

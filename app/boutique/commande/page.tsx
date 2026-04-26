@@ -19,6 +19,14 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState<string | null>(null)
   const orderIdRef = useRef<string | null>(null)
 
+  const PAYS_EUROPE = [
+    'France', 'Belgique', 'Luxembourg', 'Allemagne', 'Espagne', 'Italie',
+    'Portugal', 'Pays-Bas', 'Autriche', 'Pologne', 'Roumanie', 'Grèce',
+    'Hongrie', 'République tchèque', 'Slovaquie', 'Slovénie', 'Croatie',
+    'Bulgarie', 'Danemark', 'Finlande', 'Suède', 'Irlande', 'Lituanie',
+    'Lettonie', 'Estonie', 'Chypre', 'Malte', 'Suisse',
+  ]
+
   const [form, setForm] = useState({
     customerName: '',
     customerEmail: '',
@@ -26,6 +34,7 @@ export default function CheckoutPage() {
     address: '',
     city: '',
     postalCode: '',
+    country: 'France',
   })
 
   useEffect(() => {
@@ -165,10 +174,26 @@ export default function CheckoutPage() {
                       required />
                   </div>
                 </div>
+                <div>
+                  <label className="label">Pays *</label>
+                  <select
+                    className="input-field"
+                    value={form.country}
+                    onChange={e => setForm(f => ({ ...f, country: e.target.value }))}
+                    required
+                  >
+                    {PAYS_EUROPE.map(p => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                  {form.country === 'Suisse' && (
+                    <p className="text-red-500 text-xs mt-1">⚠️ Nous ne livrons pas en Suisse.</p>
+                  )}
+                </div>
               </div>
 
-              <button type="submit" disabled={loading}
-                className="btn-primary w-full flex items-center justify-center gap-2 py-4">
+              <button type="submit" disabled={loading || form.country === 'Suisse'}
+                className="btn-primary w-full flex items-center justify-center gap-2 py-4 disabled:opacity-50">
                 {loading
                   ? <span className="animate-spin">◌</span>
                   : <><CreditCard size={18} /> Continuer vers le paiement</>}
