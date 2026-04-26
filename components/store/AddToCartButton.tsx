@@ -80,6 +80,9 @@ export default function AddToCartButton({ product, initialColor, onColorChange }
               </button>
             ))}
           </div>
+          <p className="text-xs text-nude-dark mt-2">
+            👗 Nos articles taillent fidèlement — choisissez votre taille habituelle.
+          </p>
         </div>
       )}
 
