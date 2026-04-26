@@ -20,21 +20,34 @@ export default function SettingsForm({ settings }: Props) {
 
   const [images, setImages] = useState<string[]>(initial)
 
-  async function uploadFile(file: File) {
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch('/api/upload', { method: 'POST', body: fd })
-    const { url } = await res.json()
-    return url as string
+  async function uploadFile(file: File): Promise<string | null> {
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) throw new Error('Upload failed')
+      const { url } = await res.json()
+      return url as string
+    } catch {
+      return null
+    }
   }
 
   async function handleFiles(files: FileList) {
     const arr = Array.from(files)
-    setUploadCount(c => c + arr.length)
-    const urls = await Promise.all(arr.map(uploadFile))
-    setImages(prev => [...prev, ...urls])
-    setUploadCount(c => c - arr.length)
-    toast.success(arr.length > 1 ? `${arr.length} images ajoutées !` : 'Image ajoutée !')
+    let added = 0
+    for (const file of arr) {
+      setUploadCount(c => c + 1)
+      const url = await uploadFile(file)
+      setUploadCount(c => c - 1)
+      if (url) {
+        setImages(prev => [...prev, url])
+        added++
+      } else {
+        toast.error(`Erreur upload: ${file.name}`)
+      }
+    }
+    if (added > 0) toast.success(added > 1 ? `${added} images ajoutées !` : 'Image ajoutée !')
   }
 
   function removeImage(index: number) {
