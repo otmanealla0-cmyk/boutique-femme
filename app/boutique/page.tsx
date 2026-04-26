@@ -34,7 +34,7 @@ export default async function HomePage() {
               <span className="italic text-rose-deep text-2xl md:text-3xl">pour dead tes outfits</span>
             </h1>
             <p className="text-nude-dark text-base md:text-lg mb-6 md:mb-8 max-w-md mx-auto md:mx-0">
-              Retrouve ici tes pépites du moment à prix doux
+              Des promotions vous attendent chaque semaine !
             </p>
             <Link href="/boutique/produits" className="btn-primary inline-flex items-center gap-2">
               Découvrir la boutique
