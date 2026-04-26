@@ -20,16 +20,19 @@ export default function SettingsForm({ settings }: Props) {
 
   const [images, setImages] = useState<string[]>(initial)
 
-  async function uploadFile(file: File): Promise<string | null> {
+  async function uploadFile(file: File): Promise<{ url: string } | { error: string }> {
+    if (file.size > 8 * 1024 * 1024) {
+      return { error: `${file.name} trop lourde (max 8 Mo)` }
+    }
     try {
       const fd = new FormData()
       fd.append('file', file)
       const res = await fetch('/api/upload', { method: 'POST', body: fd })
-      if (!res.ok) throw new Error('Upload failed')
-      const { url } = await res.json()
-      return url as string
-    } catch {
-      return null
+      const data = await res.json()
+      if (!res.ok) return { error: data.error || `Erreur ${res.status}` }
+      return { url: data.url }
+    } catch (e) {
+      return { error: e instanceof Error ? e.message : 'Erreur réseau' }
     }
   }
 
@@ -38,13 +41,13 @@ export default function SettingsForm({ settings }: Props) {
     let added = 0
     for (const file of arr) {
       setUploadCount(c => c + 1)
-      const url = await uploadFile(file)
+      const result = await uploadFile(file)
       setUploadCount(c => c - 1)
-      if (url) {
-        setImages(prev => [...prev, url])
+      if ('url' in result) {
+        setImages(prev => [...prev, result.url])
         added++
       } else {
-        toast.error(`Erreur upload: ${file.name}`)
+        toast.error(result.error)
       }
     }
     if (added > 0) toast.success(added > 1 ? `${added} images ajoutées !` : 'Image ajoutée !')
