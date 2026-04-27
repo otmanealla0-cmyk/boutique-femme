@@ -182,6 +182,77 @@ export async function sendAdminOrderAlert(params: {
   })
 }
 
+export async function sendShippingEmail(params: {
+  orderNumber: string
+  customerName: string
+  customerEmail: string
+  city: string
+}) {
+  const { orderNumber, customerName, customerEmail, city } = params
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+    <body style="margin:0; padding:0; background-color:#FAFAF6; font-family:'Helvetica Neue', Arial, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAF6; padding:40px 20px;">
+        <tr><td align="center">
+          <table width="100%" style="max-width:560px; background:#ffffff; border:1px solid #EDE5D8;">
+
+            <tr>
+              <td style="padding:36px 40px 28px; border-bottom:1px solid #EDE5D8; text-align:center;">
+                <p style="margin:0; font-size:28px; letter-spacing:4px; font-weight:700; color:#1A1512; font-family:Georgia, serif;">DRESS BY ME</p>
+                <p style="margin:6px 0 0; font-size:11px; letter-spacing:3px; color:#9E8E7C; text-transform:uppercase;">Ta commande est en route 🚚</p>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:32px 40px;">
+                <p style="margin:0 0 8px; font-size:15px; color:#1A1512;">Bonjour ${esc(customerName)},</p>
+                <p style="margin:0 0 24px; font-size:14px; color:#9E8E7C; line-height:1.6;">
+                  Bonne nouvelle ! Ta commande vient d'être expédiée et est en route vers ${esc(city)}. 📦
+                </p>
+
+                <div style="background:#F2EBE0; padding:14px 20px; margin-bottom:28px; text-align:center;">
+                  <p style="margin:0; font-size:11px; letter-spacing:2px; color:#9E8E7C; text-transform:uppercase;">Numéro de commande</p>
+                  <p style="margin:4px 0 0; font-size:20px; font-weight:700; color:#1A1512; font-family:Georgia, serif;">${esc(orderNumber)}</p>
+                </div>
+
+                <p style="margin:0 0 28px; font-size:14px; color:#9E8E7C; line-height:1.6;">
+                  Tu recevras ta commande dans les prochains jours. Pour toute question, réponds directement à cet email ou contacte-nous sur Snapchat 👻 <strong style="color:#1A1512;">shopluxe31</strong>
+                </p>
+
+                <div style="text-align:center;">
+                  <a href="https://dressbymee.shop/boutique/compte"
+                     style="display:inline-block; background:#1A1512; color:#ffffff; text-decoration:none; padding:14px 32px; font-size:12px; letter-spacing:3px; text-transform:uppercase;">
+                    Suivre ma commande
+                  </a>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:24px 40px; border-top:1px solid #EDE5D8; text-align:center;">
+                <p style="margin:0; font-size:11px; color:#9E8E7C; letter-spacing:1px;">dressbymee.shop</p>
+              </td>
+            </tr>
+
+          </table>
+        </td></tr>
+      </table>
+    </body>
+    </html>
+  `
+
+  await resend.emails.send({
+    from: 'Dress By Me <noreply@dressbymee.shop>',
+    replyTo: 'dressbymee.support@gmail.com',
+    to: customerEmail,
+    subject: `Ta commande ${orderNumber} est expédiée 🚚`,
+    html,
+  })
+}
+
 export async function sendWelcomeEmail({ name, email }: { name: string; email: string }) {
   const html = `
     <!DOCTYPE html>

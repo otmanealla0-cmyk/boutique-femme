@@ -5,6 +5,7 @@ import OrderStatusSelect from '@/components/admin/OrderStatusSelect'
 import OrderDeleteButton from '@/components/admin/OrderDeleteButton'
 import OrderStatusFilter from '@/components/admin/OrderStatusFilter'
 import ResendEmailButton from '@/components/admin/ResendEmailButton'
+import ShippingEmailButton from '@/components/admin/ShippingEmailButton'
 
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -85,6 +86,7 @@ export default async function AdminOrders({
                   <p className="text-xl font-playfair font-bold text-charcoal">{order.total.toFixed(2)} €</p>
                   <OrderStatusSelect orderId={order.id} currentStatus={order.status} />
                   <ResendEmailButton orderId={order.id} />
+                  <ShippingEmailButton orderId={order.id} />
                   <OrderDeleteButton orderId={order.id} />
                 </div>
               </div>
