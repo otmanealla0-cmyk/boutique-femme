@@ -5,8 +5,8 @@ const MAINTENANCE_PASSWORD = process.env.MAINTENANCE_PASSWORD || 'dressbyme2026'
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  // Admin toujours accessible
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/auth')) {
+  // Admin et API admin toujours accessibles
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/auth') || pathname.startsWith('/api/admin')) {
     return NextResponse.next()
   }
 
