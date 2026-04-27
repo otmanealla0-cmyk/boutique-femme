@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 
-const SECRET = process.env.NEXTAUTH_SECRET || 'customer-secret-key'
+const SECRET = process.env.NEXTAUTH_SECRET!
+if (!process.env.NEXTAUTH_SECRET) throw new Error('NEXTAUTH_SECRET doit être défini dans les variables d\'environnement')
 const COOKIE = 'customer-token'
 
 export function signCustomerToken(payload: { id: string; email: string; name: string }) {

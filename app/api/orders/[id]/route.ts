@@ -24,7 +24,10 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id:
   if (!session) return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
 
   const { id } = await params
-  await prisma.order.delete({ where: { id } })
-
-  return NextResponse.json({ ok: true })
+  try {
+    await prisma.order.delete({ where: { id } })
+    return NextResponse.json({ ok: true })
+  } catch {
+    return NextResponse.json({ error: 'Commande introuvable' }, { status: 404 })
+  }
 }

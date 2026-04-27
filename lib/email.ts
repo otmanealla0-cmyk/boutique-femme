@@ -2,6 +2,15 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+function esc(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+}
+
 interface OrderItem {
   product: { name: string }
   quantity: number
@@ -25,11 +34,11 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
   const { orderNumber, customerName, customerEmail, items, total, address, postalCode, city } = params
 
   const itemsHtml = items.map(item => {
-    const details = [item.size, item.color].filter(Boolean).join(' · ')
+    const details = [item.size, item.color].filter(Boolean).map(s => esc(s as string)).join(' · ')
     return `
       <tr>
         <td style="padding:10px 0; border-bottom:1px solid #EDE5D8; color:#1A1512; font-size:14px;">
-          ${item.product.name}${details ? ` <span style="color:#9E8E7C">(${details})</span>` : ''}
+          ${esc(item.product.name)}${details ? ` <span style="color:#9E8E7C">(${details})</span>` : ''}
           × ${item.quantity}
         </td>
         <td style="padding:10px 0; border-bottom:1px solid #EDE5D8; text-align:right; color:#1A1512; font-size:14px; white-space:nowrap;">
@@ -63,7 +72,7 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
             <!-- Body -->
             <tr>
               <td style="padding:32px 40px;">
-                <p style="margin:0 0 8px; font-size:15px; color:#1A1512;">Bonjour ${customerName},</p>
+                <p style="margin:0 0 8px; font-size:15px; color:#1A1512;">Bonjour ${esc(customerName)},</p>
                 <p style="margin:0 0 24px; font-size:14px; color:#9E8E7C; line-height:1.6;">
                   Ta commande a bien été reçue et est en cours de préparation. Merci pour ta confiance !
                 </p>
@@ -86,7 +95,7 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
                 <!-- Delivery -->
                 <div style="margin-top:28px; padding:16px 20px; border:1px solid #EDE5D8;">
                   <p style="margin:0 0 6px; font-size:11px; letter-spacing:2px; color:#9E8E7C; text-transform:uppercase;">Adresse de livraison</p>
-                  <p style="margin:0; font-size:14px; color:#1A1512; line-height:1.6;">${address}<br>${postalCode} ${city}</p>
+                  <p style="margin:0; font-size:14px; color:#1A1512; line-height:1.6;">${esc(address)}<br>${esc(postalCode)} ${esc(city)}</p>
                 </div>
 
                 <!-- CTA -->
