@@ -18,10 +18,12 @@ export async function POST(req: NextRequest) {
     )
   }
 
+  const uniqueRef = `${order.orderNumber}-${Date.now()}`
+
   const checkout = await createSumUpCheckout({
     amount: order.total,
     currency: 'EUR',
-    orderId: order.orderNumber,
+    orderId: uniqueRef,
     description: `Commande ${order.orderNumber} – Dress By Me`,
     returnUrl: `${process.env.NEXTAUTH_URL || 'https://dressbymee.shop'}/boutique/confirmation?order=${order.id}`,
   })
