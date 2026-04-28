@@ -78,6 +78,9 @@ export default async function AdminOrders({
                   <p className="text-sm text-nude-dark">
                     {order.customerName} — {order.customerEmail}
                   </p>
+                  {order.customerPhone && (
+                    <p className="text-sm text-nude-dark">📞 {order.customerPhone}</p>
+                  )}
                   <p className="text-xs text-nude-dark mt-0.5">
                     {new Date(order.createdAt).toLocaleString('fr-FR')}
                   </p>
