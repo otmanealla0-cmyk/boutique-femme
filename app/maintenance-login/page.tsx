@@ -11,8 +11,7 @@ export default function MaintenanceLogin() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     document.cookie = `maintenance-access=${password}; path=/; max-age=86400`
-    router.push('/')
-    router.refresh()
+    window.location.href = '/'
   }
 
   return (
