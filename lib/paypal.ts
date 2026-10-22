@@ -22,7 +22,7 @@ async function getAccessToken(): Promise<string> {
   return data.access_token
 }
 
-export async function createPayPalOrder(amount: number, currency = 'EUR') {
+export async function createPayPalOrder(amount: number, orderId: string, returnUrl: string, cancelUrl: string) {
   const token = await getAccessToken()
   const res = await fetch(`${BASE_URL}/v2/checkout/orders`, {
     method: 'POST',
@@ -34,12 +34,21 @@ export async function createPayPalOrder(amount: number, currency = 'EUR') {
       intent: 'CAPTURE',
       purchase_units: [
         {
+          reference_id: orderId,
           amount: {
-            currency_code: currency,
+            currency_code: 'EUR',
             value: amount.toFixed(2),
           },
         },
       ],
+      application_context: {
+        return_url: returnUrl,
+        cancel_url: cancelUrl,
+        brand_name: 'Dress By Me',
+        locale: 'fr-FR',
+        landing_page: 'BILLING',
+        user_action: 'PAY_NOW',
+      },
     }),
   })
   if (!res.ok) {

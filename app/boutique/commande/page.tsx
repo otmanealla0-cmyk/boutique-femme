@@ -1,23 +1,16 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useCart } from '@/lib/cart'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
-import { ChevronLeft, Lock, CreditCard } from 'lucide-react'
-import dynamic from 'next/dynamic'
-const PayPalButton = dynamic(() => import('@/components/store/PayPalButton'), { ssr: false })
-
-type Step = 'form' | 'payment'
+import { ChevronLeft, CreditCard } from 'lucide-react'
 
 export default function CheckoutPage() {
-  const { items, total, clear } = useCart()
+  const { items, total } = useCart()
   const router = useRouter()
-  const [step, setStep] = useState<Step>('form')
   const [loading, setLoading] = useState(false)
-  const [orderId, setOrderId] = useState<string | null>(null)
-  const orderIdRef = useRef<string | null>(null)
 
   const PAYS_EUROPE = [
     'France', 'Belgique', 'Luxembourg', 'Allemagne', 'Espagne', 'Italie',
@@ -65,28 +58,28 @@ export default function CheckoutPage() {
       const orderData = await orderRes.json()
       if (!orderRes.ok) {
         toast.error('Erreur commande : ' + (orderData.error || orderRes.status))
-        setLoading(false)
         return
       }
 
-      setOrderId(orderData.id)
-      orderIdRef.current = orderData.id
-      setStep('payment')
+      const paypalRes = await fetch('/api/paypal/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: orderData.id }),
+      })
+
+      const paypalData = await paypalRes.json()
+      if (!paypalRes.ok) {
+        toast.error('Erreur PayPal : ' + (paypalData.error || paypalRes.status))
+        return
+      }
+
+      window.location.href = paypalData.approvalUrl
     } catch (err) {
       toast.error('Erreur réseau, veuillez réessayer.')
-      console.error('handleSubmitForm error:', err)
+      console.error('checkout error:', err)
     } finally {
       setLoading(false)
     }
-  }
-
-  async function handlePaymentSuccess() {
-    const id = orderIdRef.current || orderId
-    if (id) {
-      await fetch(`/api/orders/${id}/confirm`, { method: 'POST' })
-    }
-    clear()
-    window.location.href = `/boutique/confirmation?order=${id}`
   }
 
   return (
@@ -96,118 +89,90 @@ export default function CheckoutPage() {
         Retour au panier
       </Link>
 
-      <div className="flex items-center gap-3 mb-8">
-        <div className={`flex items-center gap-2 text-sm font-medium ${step === 'form' ? 'text-rose-deep' : 'text-nude-dark'}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'form' ? 'bg-rose-deep text-white' : 'bg-green-500 text-white'}`}>
-            {step === 'payment' ? '✓' : '1'}
-          </span>
-          Mes informations
-        </div>
-        <div className="flex-1 h-px bg-nude-medium" />
-        <div className={`flex items-center gap-2 text-sm font-medium ${step === 'payment' ? 'text-rose-deep' : 'text-nude-dark'}`}>
-          <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step === 'payment' ? 'bg-rose-deep text-white' : 'bg-nude-medium text-nude-dark'}`}>
-            2
-          </span>
-          Paiement
-        </div>
-      </div>
+      <h1 className="text-2xl font-playfair text-charcoal mb-8">Finaliser ma commande</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          {step === 'form' && (
-            <form onSubmit={handleSubmitForm} className="space-y-6">
-              <div className="card p-6 space-y-4">
-                <h2 className="font-playfair text-lg font-semibold text-charcoal">Vos informations</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="label">Nom complet *</label>
-                    <input className="input-field" placeholder="Marie Dupont"
-                      value={form.customerName}
-                      onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))}
-                      required />
-                  </div>
-                  <div>
-                    <label className="label">Email *</label>
-                    <input type="email" className="input-field" placeholder="marie@email.fr"
-                      value={form.customerEmail}
-                      onChange={e => setForm(f => ({ ...f, customerEmail: e.target.value }))}
-                      required />
-                  </div>
-                </div>
+          <form onSubmit={handleSubmitForm} className="space-y-6">
+            <div className="card p-6 space-y-4">
+              <h2 className="font-playfair text-lg font-semibold text-charcoal">Vos informations</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="label">Téléphone</label>
-                  <input type="tel" className="input-field" placeholder="+33 6 00 00 00 00"
-                    value={form.customerPhone}
-                    onChange={e => setForm(f => ({ ...f, customerPhone: e.target.value }))} />
-                </div>
-              </div>
-
-              <div className="card p-6 space-y-4">
-                <h2 className="font-playfair text-lg font-semibold text-charcoal">Adresse de livraison</h2>
-                <div>
-                  <label className="label">Adresse *</label>
-                  <input className="input-field" placeholder="12 rue des Fleurs"
-                    value={form.address}
-                    onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
+                  <label className="label">Nom complet *</label>
+                  <input className="input-field" placeholder="Marie Dupont"
+                    value={form.customerName}
+                    onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))}
                     required />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="label">Code postal *</label>
-                    <input className="input-field" placeholder="75001"
-                      value={form.postalCode}
-                      onChange={e => setForm(f => ({ ...f, postalCode: e.target.value }))}
-                      required />
-                  </div>
-                  <div>
-                    <label className="label">Ville *</label>
-                    <input className="input-field" placeholder="Paris"
-                      value={form.city}
-                      onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
-                      required />
-                  </div>
-                </div>
                 <div>
-                  <label className="label">Pays *</label>
-                  <select
-                    className="input-field"
-                    value={form.country}
-                    onChange={e => setForm(f => ({ ...f, country: e.target.value }))}
-                    required
-                  >
-                    {PAYS_EUROPE.map(p => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                  {form.country === 'Suisse' && (
-                    <p className="text-red-500 text-xs mt-1">⚠️ Nous ne livrons pas en Suisse.</p>
-                  )}
+                  <label className="label">Email *</label>
+                  <input type="email" className="input-field" placeholder="marie@email.fr"
+                    value={form.customerEmail}
+                    onChange={e => setForm(f => ({ ...f, customerEmail: e.target.value }))}
+                    required />
                 </div>
               </div>
-
-              <button type="submit" disabled={loading || form.country === 'Suisse'}
-                className="btn-primary w-full flex items-center justify-center gap-2 py-4 disabled:opacity-50">
-                {loading
-                  ? <span className="animate-spin">◌</span>
-                  : <><CreditCard size={18} /> Continuer vers le paiement</>}
-              </button>
-            </form>
-          )}
-
-          {step === 'payment' && orderId && (
-            <div className="card p-6">
-              <h2 className="font-playfair text-lg font-semibold text-charcoal mb-4">Paiement sécurisé</h2>
-              <PayPalButton
-                orderId={orderId}
-                onSuccess={handlePaymentSuccess}
-                onError={(msg) => toast.error(msg)}
-              />
-              <div className="flex items-center justify-center gap-2 mt-4 text-xs text-nude-dark">
-                <Lock size={12} />
-                Paiement 100% sécurisé via PayPal
+              <div>
+                <label className="label">Téléphone</label>
+                <input type="tel" className="input-field" placeholder="+33 6 00 00 00 00"
+                  value={form.customerPhone}
+                  onChange={e => setForm(f => ({ ...f, customerPhone: e.target.value }))} />
               </div>
             </div>
-          )}
+
+            <div className="card p-6 space-y-4">
+              <h2 className="font-playfair text-lg font-semibold text-charcoal">Adresse de livraison</h2>
+              <div>
+                <label className="label">Adresse *</label>
+                <input className="input-field" placeholder="12 rue des Fleurs"
+                  value={form.address}
+                  onChange={e => setForm(f => ({ ...f, address: e.target.value }))}
+                  required />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Code postal *</label>
+                  <input className="input-field" placeholder="75001"
+                    value={form.postalCode}
+                    onChange={e => setForm(f => ({ ...f, postalCode: e.target.value }))}
+                    required />
+                </div>
+                <div>
+                  <label className="label">Ville *</label>
+                  <input className="input-field" placeholder="Paris"
+                    value={form.city}
+                    onChange={e => setForm(f => ({ ...f, city: e.target.value }))}
+                    required />
+                </div>
+              </div>
+              <div>
+                <label className="label">Pays *</label>
+                <select
+                  className="input-field"
+                  value={form.country}
+                  onChange={e => setForm(f => ({ ...f, country: e.target.value }))}
+                  required
+                >
+                  {PAYS_EUROPE.map(p => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+                {form.country === 'Suisse' && (
+                  <p className="text-red-500 text-xs mt-1">⚠️ Nous ne livrons pas en Suisse.</p>
+                )}
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading || form.country === 'Suisse'}
+              className="btn-primary w-full flex items-center justify-center gap-2 py-4 disabled:opacity-50">
+              {loading
+                ? <span className="animate-spin">◌</span>
+                : <><CreditCard size={18} /> Payer avec PayPal</>}
+            </button>
+            <p className="text-center text-xs text-nude-dark">
+              Vous serez redirigé vers PayPal pour finaliser le paiement en toute sécurité.
+            </p>
+          </form>
         </div>
 
         <div className="card p-6 h-fit sticky top-24">
