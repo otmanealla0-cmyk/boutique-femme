@@ -8,7 +8,14 @@ export async function POST(req: NextRequest) {
   const order = await prisma.order.findUnique({ where: { id: orderId } })
   if (!order) return NextResponse.json({ error: 'Commande introuvable' }, { status: 404 })
 
-  const paypalOrder = await createPayPalOrder(order.total, 'EUR')
+  let paypalOrder
+  try {
+    paypalOrder = await createPayPalOrder(order.total, 'EUR')
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : 'PayPal API error'
+    console.error('PayPal create order error:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
 
   await prisma.order.update({
     where: { id: orderId },

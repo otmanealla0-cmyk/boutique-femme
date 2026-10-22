@@ -22,7 +22,11 @@ export default function PayPalButton({ orderId, onSuccess, onError }: Props) {
             body: JSON.stringify({ orderId }),
           })
           const data = await res.json()
-          if (!res.ok) throw new Error(data.error || 'Erreur PayPal')
+          if (!res.ok) {
+            const msg = data.error || `Erreur serveur ${res.status}`
+            onError(msg)
+            throw new Error(msg)
+          }
           return data.paypalOrderId
         }}
         onApprove={async (data) => {
@@ -38,7 +42,10 @@ export default function PayPalButton({ orderId, onSuccess, onError }: Props) {
           }
           onSuccess()
         }}
-        onError={() => onError('Une erreur est survenue, veuillez réessayer.')}
+        onError={(err) => {
+          console.error('PayPal error:', err)
+          onError('Une erreur est survenue, veuillez réessayer.')
+        }}
         onCancel={() => onError('Paiement annulé.')}
       />
     </PayPalScriptProvider>
