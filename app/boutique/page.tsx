@@ -1,6 +1,18 @@
 export const dynamic = 'force-dynamic'
 
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
+
+export const metadata: Metadata = {
+  title: 'Accueil',
+  description: 'Dress By Me – Boutique mode femme en ligne. Vêtements, sacs et accessoires tendance livrés en Europe.',
+  alternates: { canonical: 'https://dressbymee.shop/boutique' },
+  openGraph: {
+    title: 'Dress By Me – Mode Femme Tendance',
+    description: 'Boutique mode femme en ligne. Vêtements, sacs et accessoires tendance livrés en Europe.',
+    url: 'https://dressbymee.shop/boutique',
+  },
+}
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
