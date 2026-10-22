@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { ChevronLeft, Lock, CreditCard } from 'lucide-react'
-import PayPalButton from '@/components/store/PayPalButton'
+import dynamic from 'next/dynamic'
+const PayPalButton = dynamic(() => import('@/components/store/PayPalButton'), { ssr: false })
 
 type Step = 'form' | 'payment'
 
