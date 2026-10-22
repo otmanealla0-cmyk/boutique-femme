@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import { ChevronLeft, Lock, CreditCard } from 'lucide-react'
-import SumUpWidget from '@/components/store/SumUpWidget'
+import PayPalButton from '@/components/store/PayPalButton'
 
 type Step = 'form' | 'payment'
 
@@ -15,7 +15,6 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [step, setStep] = useState<Step>('form')
   const [loading, setLoading] = useState(false)
-  const [checkoutId, setCheckoutId] = useState<string | null>(null)
   const [orderId, setOrderId] = useState<string | null>(null)
   const orderIdRef = useRef<string | null>(null)
 
@@ -70,21 +69,6 @@ export default function CheckoutPage() {
 
     setOrderId(orderData.id)
     orderIdRef.current = orderData.id
-
-    const checkoutRes = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ orderId: orderData.id }),
-    })
-
-    const checkoutData = await checkoutRes.json()
-    if (!checkoutRes.ok) {
-      toast.error('Erreur paiement : ' + (checkoutData.error || checkoutRes.status))
-      setLoading(false)
-      return
-    }
-
-    setCheckoutId(checkoutData.checkoutId)
     setStep('payment')
     setLoading(false)
   }
@@ -203,17 +187,17 @@ export default function CheckoutPage() {
             </form>
           )}
 
-          {step === 'payment' && checkoutId && (
+          {step === 'payment' && orderId && (
             <div className="card p-6">
               <h2 className="font-playfair text-lg font-semibold text-charcoal mb-4">Paiement sécurisé</h2>
-              <SumUpWidget
-                checkoutId={checkoutId}
+              <PayPalButton
+                orderId={orderId}
                 onSuccess={handlePaymentSuccess}
                 onError={(msg) => toast.error(msg)}
               />
               <div className="flex items-center justify-center gap-2 mt-4 text-xs text-nude-dark">
                 <Lock size={12} />
-                Paiement 100% sécurisé — Carte bancaire & Apple Pay
+                Paiement 100% sécurisé via PayPal
               </div>
             </div>
           )}
