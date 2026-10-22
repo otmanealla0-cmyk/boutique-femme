@@ -209,8 +209,8 @@ export default function CheckoutPage() {
                 className="w-full border-2 border-nude-medium hover:border-charcoal rounded-xl p-5 flex items-center justify-between transition-all disabled:opacity-50 group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-10 bg-[#003087] rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm tracking-tight">Pay<span className="text-[#009cde]">Pal</span></span>
+                  <div className="w-16 h-10 flex items-center justify-center">
+                    <Image src="/paypal-logo.png" alt="PayPal" width={64} height={40} className="object-contain" />
                   </div>
                   <div className="text-left">
                     <p className="font-medium text-charcoal">PayPal</p>
