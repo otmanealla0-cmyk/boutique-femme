@@ -45,33 +45,39 @@ export default function CheckoutPage() {
     e.preventDefault()
     setLoading(true)
 
-    const orderRes = await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...form,
-        items: items.map(i => ({
-          productId: i.productId,
-          quantity: i.quantity,
-          size: i.size,
-          color: i.color,
-          bagSize: i.bagSize,
-          withBox: i.withBox,
-        })),
-      }),
-    })
+    try {
+      const orderRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          items: items.map(i => ({
+            productId: i.productId,
+            quantity: i.quantity,
+            size: i.size,
+            color: i.color,
+            bagSize: i.bagSize,
+            withBox: i.withBox,
+          })),
+        }),
+      })
 
-    const orderData = await orderRes.json()
-    if (!orderRes.ok) {
-      toast.error('Erreur commande : ' + (orderData.error || orderRes.status))
+      const orderData = await orderRes.json()
+      if (!orderRes.ok) {
+        toast.error('Erreur commande : ' + (orderData.error || orderRes.status))
+        setLoading(false)
+        return
+      }
+
+      setOrderId(orderData.id)
+      orderIdRef.current = orderData.id
+      setStep('payment')
+    } catch (err) {
+      toast.error('Erreur réseau, veuillez réessayer.')
+      console.error('handleSubmitForm error:', err)
+    } finally {
       setLoading(false)
-      return
     }
-
-    setOrderId(orderData.id)
-    orderIdRef.current = orderData.id
-    setStep('payment')
-    setLoading(false)
   }
 
   async function handlePaymentSuccess() {
