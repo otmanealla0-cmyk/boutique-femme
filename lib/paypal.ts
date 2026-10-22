@@ -15,7 +15,10 @@ async function getAccessToken(): Promise<string> {
     cache: 'no-store',
   })
   const data = await res.json()
-  if (!data.access_token) throw new Error('PayPal auth failed')
+  if (!data.access_token) {
+    console.error('PayPal auth error:', JSON.stringify(data))
+    throw new Error(`PayPal auth failed: ${data.error_description || data.error || JSON.stringify(data)}`)
+  }
   return data.access_token
 }
 
