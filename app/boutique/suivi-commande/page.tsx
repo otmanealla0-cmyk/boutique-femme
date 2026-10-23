@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Search, Package, Truck, CheckCircle, Clock, X } from 'lucide-react'
 
 type OrderStatus = 'pending' | 'paid' | 'preparation' | 'shipped' | 'delivered' | 'cancelled'
@@ -47,10 +48,30 @@ function getStepIndex(status: OrderStatus): number {
 }
 
 export default function SuiviCommandePage() {
-  const [orderNumber, setOrderNumber] = useState('')
+  const searchParams = useSearchParams()
+  const [orderNumber, setOrderNumber] = useState(searchParams.get('orderNumber') ?? '')
   const [result, setResult] = useState<TrackingResult | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    const num = searchParams.get('orderNumber')
+    if (num) {
+      setOrderNumber(num.toUpperCase())
+      fetchOrder(num.toUpperCase())
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function fetchOrder(num: string) {
+    setLoading(true)
+    setError('')
+    setResult(null)
+    const res = await fetch(`/api/orders/track?orderNumber=${encodeURIComponent(num)}`)
+    const data = await res.json()
+    if (!res.ok) setError('Commande introuvable. Vérifiez votre numéro de commande.')
+    else setResult(data)
+    setLoading(false)
+  }
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -59,15 +80,7 @@ export default function SuiviCommandePage() {
     setError('')
     setResult(null)
 
-    const res = await fetch(`/api/orders/track?orderNumber=${encodeURIComponent(orderNumber.trim())}`)
-    const data = await res.json()
-
-    if (!res.ok) {
-      setError('Commande introuvable. Vérifiez votre numéro de commande.')
-    } else {
-      setResult(data)
-    }
-    setLoading(false)
+    await fetchOrder(orderNumber.trim())
   }
 
   const stepIndex = result ? getStepIndex(result.status) : -1

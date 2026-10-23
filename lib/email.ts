@@ -100,7 +100,7 @@ export async function sendOrderConfirmation(params: SendConfirmationParams) {
 
                 <!-- CTA -->
                 <div style="margin-top:32px; text-align:center;">
-                  <a href="https://dressbymee.shop/boutique/compte"
+                  <a href="https://dressbymee.shop/boutique/suivi-commande?orderNumber=${orderNumber}"
                      style="display:inline-block; background:#1A1512; color:#ffffff; text-decoration:none;
                             padding:14px 32px; font-size:12px; letter-spacing:3px; text-transform:uppercase;">
                     Suivre ma commande
