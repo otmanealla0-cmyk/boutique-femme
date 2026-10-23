@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
 import Logo from '@/components/Logo'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/boutique/compte'
   const [form, setForm] = useState({ name: '', email: '', password: '' })
   const [loading, setLoading] = useState(false)
 
@@ -24,7 +26,7 @@ export default function RegisterPage() {
     setLoading(false)
     if (res.ok) {
       toast.success('Compte créé !')
-      router.push('/boutique/compte')
+      router.push(redirect)
       router.refresh()
     } else {
       toast.error(data.error)
@@ -61,7 +63,10 @@ export default function RegisterPage() {
           </form>
           <p className="text-center text-sm text-nude-dark mt-5">
             Déjà un compte ?{' '}
-            <Link href="/boutique/compte/connexion" className="text-rose-deep hover:underline font-medium">
+            <Link
+              href={`/boutique/compte/connexion${redirect !== '/boutique/compte' ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}
+              className="text-rose-deep hover:underline font-medium"
+            >
               Se connecter
             </Link>
           </p>

@@ -39,6 +39,18 @@ export default function CheckoutPage() {
     if (items.length === 0) router.push('/boutique/panier')
   }, [items.length, router])
 
+  useEffect(() => {
+    fetch('/api/customer/me').then(r => r.ok ? r.json() : null).then(data => {
+      if (data?.customer) {
+        setForm(f => ({
+          ...f,
+          customerName: data.customer.name || '',
+          customerEmail: data.customer.email || '',
+        }))
+      }
+    }).catch(() => {})
+  }, [])
+
   async function handleSubmitForm(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
