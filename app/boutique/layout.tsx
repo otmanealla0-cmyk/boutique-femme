@@ -24,6 +24,8 @@ export default async function StoreLayout({ children }: { children: React.ReactN
             </div>
             <p className="text-sm text-nude-dark">Mode femme – Vêtements & Sacs tendance</p>
             <div className="flex justify-center gap-4 mt-4 text-xs text-nude-dark">
+              <a href="/boutique/suivi-commande" className="hover:text-nude-base transition-colors">Suivi de commande</a>
+              <span>·</span>
               <a href="/boutique/mentions-legales" className="hover:text-nude-base transition-colors">Mentions légales</a>
               <span>·</span>
               <a href="/boutique/cgv" className="hover:text-nude-base transition-colors">CGV</a>

@@ -10,6 +10,7 @@ import ShippingEmailButton from '@/components/admin/ShippingEmailButton'
 const statusColors: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
   paid: 'bg-green-100 text-green-700',
+  preparation: 'bg-amber-100 text-amber-700',
   shipped: 'bg-blue-100 text-blue-700',
   delivered: 'bg-purple-100 text-purple-700',
   cancelled: 'bg-red-100 text-red-700',
@@ -18,7 +19,8 @@ const statusColors: Record<string, string> = {
 const statusLabels: Record<string, string> = {
   pending: 'En attente',
   paid: 'Payée',
-  shipped: 'Expédiée',
+  preparation: 'En préparation',
+  shipped: 'En expédition',
   delivered: 'Livrée',
   cancelled: 'Annulée',
 }

@@ -91,8 +91,12 @@ export default async function ConfirmationPage({
       )}
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        {customer && (
-          <Link href="/boutique/compte" className="btn-secondary inline-flex items-center justify-center gap-2">
+        {order && (
+          <Link
+            href={`/boutique/suivi-commande?orderNumber=${order.orderNumber}`}
+            className="btn-secondary inline-flex items-center justify-center gap-2"
+          >
+            <Package size={16} />
             Suivre ma commande
           </Link>
         )}

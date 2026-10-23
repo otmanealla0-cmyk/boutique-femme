@@ -7,8 +7,9 @@ import { useRouter } from 'next/navigation'
 const statuses = [
   { value: 'pending', label: 'En attente' },
   { value: 'paid', label: 'Payée' },
-  { value: 'shipped', label: 'Expédiée' },
-  { value: 'delivered', label: 'Livrée' },
+  { value: 'preparation', label: '📦 En préparation' },
+  { value: 'shipped', label: '🚚 En expédition' },
+  { value: 'delivered', label: '✅ Livrée' },
   { value: 'cancelled', label: 'Annulée' },
 ]
 
